@@ -76,4 +76,51 @@ fun main() {
     rectangleArea(10.toDouble(),10.toDouble())
     rectangleArea(width = 10.toDouble(), height = 10.toDouble())
     rectangleArea(height = 10.toDouble(), width = 10.toDouble())
+
+
+    /* 3.1.3 오버로딩과 디폴트 값
+    자바 메서드와 마찬가지로 코틀린 함수도 오버로딩 할 수 있다.
+    반환값만 다른 경우 컴파일 오류가 밣생한다.
+    fun plus(a:String,b:String) = a+b
+    fun plus(a:String,b:String) = a.toInt()+b.toInt() // error: conflicting overloads : (생략)
+
+    실제 호출할 함수를 결정할때 컴파일러는 자바 오버로딩 해소규칙과 비슷한 다음 규칙을 따른다.
+    1. 파라미터의 개수와 타입을 기준으로 호출 할 수 있는 모든 함수를 찾는다.
+    2. 덜구체적인 함수를 제외시킨다. -> 함수의 파라미터 타입이 상위 타입인 경우 ,이경우는 다른 함수보다 덜 구체적인 함수다.
+    3. 후보가 하나로 압축되면 호출하고 둘 이상이면 컴파일 오류가 발생
+    fun mul(a:Int, b:Int) = a*b // 1
+    fun mul(a:Int, b:Int, c:Int) = a*b*c // 2
+    fun mul(s:String, b:Int) = s.repeat(n) // 3
+    fun mul(o:Any, n:Int) = Array(n){o} // 4
+
+    mal(1,2) 호출시 Int가 Any의 하위 타입이므로 1과 4중 1을 선택
+    mal(1,2L) // error: none of the following functions can be called with the arguments supplied
+              // 해당 파라미터 타입에 맞는 함수가 없음
+    mal(1L,2) // Long,Int 타입을 받을 수 있는 함수는 4번 뿐이므로 4를 선택
+    mal("0",3) // String 이 Any의 하위 타입이기 때문에 3과 4중 3을 선택
+
+    코틀린은 아래와 같이 함수를 정의할 수 있다. 함수를 통해 새로운 함수 생성
+    fun readInt() = readInt(10)
+
+    코틀린에서는 경우에 따라 함수 오버로딩을 쓰지 않아도 된다. 더 우아한 해법인 디폴트 파라미터가 있기 떄문이다.
+
+    fun readInt(radix:Int = 10) = readLine!!.toInt(radix)
+
+    파라미터가 여러게 있는 함수의 경우 디폴트 값이 존재하는 파라미터를 뒤쪽에 배치하는 것이 더 좋은 코딩스타일이다.
+    디폴트 값이 있으면 인자 개수가 가변적이어서 오버로드 해소가 복잡해진다.
+    fun mul(a:Int, b:Int = 1) = a*b // 1
+    fun mul(a:Int, b:Long = 1L) = a*b // 2
+    fun mul(a:Int, b:Int, c:Int = 1) = a*b*c // 3
+
+    mul(10) // 오류: 1과 2중 무엇을 호출해야할지 결정할 수 없음
+    mul(10,20) // 인자가 더 적기 때문에 1과 3중에 1을 결정
+    mul(10,20,30) // 적용가능한 함수가 3번이므로 3을 선택
+
+    인자가 두개인 mul(10,20)을 호출할 경우 3번이 덜 구체적인 함수다. 3번의 함수는 세번쨰 파라미터로 디폹트 값이 있는
+    c를 추가해서 인자가 두개인 함수를 확장한 것이기 때문이다.
+
+    만약 1번 함수를 아래와 같이 바꾸면
+    fun mul(a:Number, b:Int = 1) = a*b
+    Number는 Int의 상위타입이므로 1번 함수가 3번 함수보다 덜 구체적인 함수로 간주돼 3번 함수가 호출된다.
+    * */
 }
