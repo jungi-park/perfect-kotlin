@@ -33,6 +33,23 @@ fun main() {
     * */
 
     /*
+    코틀린은 값에 의한 호출 의미론을 사용한다.
+    파라미터의 값은 호출한 쪽에 값을 복사해서 사용한다는 의미이다.
+    호출 인자로 전달한 변수를 변경해도 함수 내부의 파라미터 값은 영향이 없다는 의미이다.
+    하지만 파라미터가 참조 값일 경우 참조 주소를 복사해서 사용 하기 때문에 참조 주소는 변하지 않지만
+    참조 주소가 가르키는 값은 변할 수 있다.
+    fun increment(a:IntArray):Int{
+        return ++a[0]
+    }
+
+    fun main(){
+        val a = intArrayOf(1,2,3)
+        println(increment(a)) // 2
+        println(a) // [2,2,3]
+    }
+    * */
+
+    /*
     경우에 따라 반환타입을 생략할 수 있는 예외적인 두가지 경우가 있다.
     1. 유닛(unit)타입을 반환하는 경우 -> unit은 자바의 void에 해당하는 코틀린 타입 즉, 의미있는 반환값을 돌려주지 않는다. 는 의미
     아래의 두코드는 같다.
@@ -48,4 +65,15 @@ fun main() {
     fun fun circleArea(radius: Double) = PI * radius * radius // 반환값이 Double로 추론됨
     * */
 
+
+    /* 3.1.2 위치기반 인자와 이름 붙은 인자
+    자바나 다른 언어는 위치 기반 인자를 널리 쓰고 있다. 반면 코틀린은 이름 붙은 인자라고 불리는 방식도 제공한다.
+    * */
+    fun rectangleArea(width:Double, height:Double):Double{
+        return width * height
+    }
+    // 아래 방식 모두 사용가능
+    rectangleArea(10.toDouble(),10.toDouble())
+    rectangleArea(width = 10.toDouble(), height = 10.toDouble())
+    rectangleArea(height = 10.toDouble(), width = 10.toDouble())
 }
