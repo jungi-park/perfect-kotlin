@@ -169,4 +169,35 @@ fun main() {
     fun printSorted2(vararg items: Int, prefix: String = "") {}
     printSorted2(6,2,3,4,5)
     printSorted2(6,2,3,4,5, prefix = "!")
+
+    /* 3.1.5 함수의 영역과 가시성
+    코클린 함수는 정의된 위치에 따라 세 가지로 구분할 수 있다.
+    1. 파일에 직접 선언된 최상위함수
+    2. 어떤 타입 내부에 선언된 멤버 함수
+    3. 다은 함수 안에 선언된 지역 함수
+
+    여기서는 1.3번만 다루고 2번은 4장 클래스와 객체 다루기에서 설명
+    * */
+    // util.kt에서 불러온 readInt() 함수
+    print(readInt()+readInt())
+
+    /* 경우에 따라 함수정의 앞에 private, internal 이라는 키워드를 붙일 수 있다. 이런 키워드를 가시성 변경자라 한다.
+    private로 정의하면 함수가 정의된 파일 안에서만 해당 함수를 볼 수 있다.
+    internal로 정의하면 모듈내부에서만 볼 수 있다.
+    public이라는 변경자도 있지만 최상위 함수는 디폴트로 public가 적용된다.
+    코틀린의 모듈이란 기본적으로 함께 컴파일되는 파일 전부를 의미한다.
+    */
+
+    /*
+    지역 함수는 함수안에 함수로써 블록안에서만 접근가능하다.
+    fun main(){
+        fun readInt() = readLine()!!.toInt()
+        readInt()
+    }
+
+    fun readIntPair = intArray(readInt(),readInt()) // 오류 발생
+
+    또한 지역 함수는 자신을 둘러싼 함수, 블록에 선언된 변수나 함수에 접근가능하다.
+    주의 할 점으로 지역함수에는 가시성 변경자를 붙일 수 없다.
+    * */
 }

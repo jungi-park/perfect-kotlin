@@ -1,0 +1,1 @@
+fun readInt() = readLine()!!.toInt()
