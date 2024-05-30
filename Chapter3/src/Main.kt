@@ -69,11 +69,11 @@ fun main() {
     /* 3.1.2 위치기반 인자와 이름 붙은 인자
     자바나 다른 언어는 위치 기반 인자를 널리 쓰고 있다. 반면 코틀린은 이름 붙은 인자라고 불리는 방식도 제공한다.
     * */
-    fun rectangleArea(width:Double, height:Double):Double{
+    fun rectangleArea(width: Double, height: Double): Double {
         return width * height
     }
     // 아래 방식 모두 사용가능
-    rectangleArea(10.toDouble(),10.toDouble())
+    rectangleArea(10.toDouble(), 10.toDouble())
     rectangleArea(width = 10.toDouble(), height = 10.toDouble())
     rectangleArea(height = 10.toDouble(), width = 10.toDouble())
 
@@ -125,4 +125,48 @@ fun main() {
 
     구체적 함수 중요도 -> 갯수 > 타입 > 확장(디폴트)
     * */
+
+    /* 3.1.4 vararg
+    앞에서 인자의 개수가 정해지지 않은 arrayOf() 같은 함수를 봤다. 우리가 직접 작성한 함수에서도 이런 기능을 쓸 수 있다.
+    필요한 과정은 파라미터 정의앞에 vararg를 붙이는것 뿐이다.
+    함수내부에서는 파라미터를 적절한 배열타입으로 사용할 수 있다.
+    아래의 함수의 items는 내부에서 IntArray 이다.
+    * */
+    fun printSorted(vararg items: Int) {
+        items.sort()
+        println(items.contentToString())
+    }
+    printSorted(6, 2, 10, 1)
+
+    /*
+    또한 스프레드 연산자인 *을 사용하면 배열을 가변 인자 대신 넘길 수 있다.
+    스프레드 문법을 사용하면 배열을 복사해서 사용하는 것이므로 원본 데이터를 바꾸지 않는다.
+    * */
+    val numbers = intArrayOf(6, 2, 10, 1)
+    printSorted(*numbers)
+
+    /*
+    둘이상의 vararg 파라미터를 선언하는 것은 금지된다.
+    다만 여러인자와 스프레드를 섞어서 호출하는 것은 가능하다.
+    * */
+    printSorted(1, 2, *numbers)
+
+
+    // 가변인자에 이름있는 인자로 전달 할 수는 없으나 배열을 전달하는 것은 가능하다.
+    // printSorted(items = 1,2,3)
+    printSorted(items = intArrayOf(3, 10, 7))
+
+    /*
+    디폴트값이 있는 파라미터와 vararg를 같이 쓰는 것은 조금 신경을 써야한다.
+    아래코드의 1번의 경우 가변인자로 주고싶었던 6이라는 인트값이 첫번쨰 위치값인 prefix값으로 들어가 오류가 난다.
+    이것을 피하기 위해서는 이름있는 매개변수를 사용하면된다.
+    * */
+    fun printSorted1(prefix: String = "", vararg items: Int) {}
+    // printSorted1(6,2,3,4,5) // 1
+    printSorted1(items = intArrayOf(6, 2, 3, 4, 5)) //2
+
+    // 가변인자가 앞에 있는 경우 디폴트 값이 있는 파라미터를 호출하고 싶을 경우 이름붙은 인자로 호출해야 한다.
+    fun printSorted2(vararg items: Int, prefix: String = "") {}
+    printSorted2(6,2,3,4,5)
+    printSorted2(6,2,3,4,5, prefix = "!")
 }
