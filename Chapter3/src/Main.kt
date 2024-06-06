@@ -222,4 +222,30 @@ fun main() {
     !!! 예를 들어 소스파일은 모두 한 디렉터리 아래 있지만 각각이 서로 다른 패키지에 포함 될 수도 있고, 한 패키지에 포함된 소스 파일들이 모두 서로 다른 디렉터리에 들어갈 수도 있다.
     !!! 하지만 프로젝트의 여러부분을 이동할때 좀 더 편하기 때문에 디렉터리와 패키지 구조를 동일하게 하는편을 권장한다.
     * */
+
+    /* 3.2.2 임포트 디렉티브 사용하기
+    지금까지 예제에서 봤던 가장 단순한 임포트 형태는 전체 이름을 지정해 어떤 선언을 임포트하는 것이다.
+    import java.lang.math // JDK 클래스
+    import foo.bar.util.readInt // 최상위 함수
+
+    임포트 디렉티브가 위와같이 클래스나 함수등 최상위 선언만 임포트할 수 있는 것은 아니다.
+    클래스 안에 클래스나 enum 상수 등도 임포트할 수 있다.
+    import kotlin.Int.Companion.MIN_VALUE
+    fun fromMin(step: Int) = MIN_VALUE + step
+
+    만약 readInt() 함수가 foo 패키지와 bar패키지 양쪽에 존재할때 해당 함수를 사용하기 위해 as(alias)를 사용할 수 있다.
+    import foo.readInt as fooReadInt
+    import bar.readInt as barReadInt
+
+    패키지 내의 모든 기능을 임포트하고 싶다면 * 와일드카드를 사용하면된다.
+    import kotlin.math.*
+
+    이런 형태의 필요시 임포트 기능은 구체적인 선언을 지정하는 임포트보다 우선 순위가 낮다. readInt()함수가 bar와 foo 패키지 양쪽에 있을떄 아래의 경우
+    import foo.readInt
+    import bar.*
+
+    readInt()를 호출하게되면 foo패키지의 readInt를 사용하게 된다.
+    * */
+
+
 }
