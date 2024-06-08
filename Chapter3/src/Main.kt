@@ -167,8 +167,8 @@ fun main() {
 
     // 가변인자가 앞에 있는 경우 디폴트 값이 있는 파라미터를 호출하고 싶을 경우 이름붙은 인자로 호출해야 한다.
     fun printSorted2(vararg items: Int, prefix: String = "") {}
-    printSorted2(6,2,3,4,5)
-    printSorted2(6,2,3,4,5, prefix = "!")
+    printSorted2(6, 2, 3, 4, 5)
+    printSorted2(6, 2, 3, 4, 5, prefix = "!")
 
     /* 3.1.5 함수의 영역과 가시성
     코클린 함수는 정의된 위치에 따라 세 가지로 구분할 수 있다.
@@ -179,7 +179,7 @@ fun main() {
     여기서는 1.3번만 다루고 2번은 4장 클래스와 객체 다루기에서 설명
     * */
     // util.kt에서 불러온 readInt() 함수
-    print(readInt()+readInt())
+    print(readInt() + readInt())
 
     /* 경우에 따라 함수정의 앞에 private, internal 이라는 키워드를 붙일 수 있다. 이런 키워드를 가시성 변경자라 한다.
     private로 정의하면 함수가 정의된 파일 안에서만 해당 함수를 볼 수 있다.
@@ -245,6 +245,26 @@ fun main() {
     import bar.*
 
     readInt()를 호출하게되면 foo패키지의 readInt를 사용하게 된다.
+    * */
+
+    /* 3.3.1 if문으로 선택하기
+    코틀린의 if문은 자바와 비슷한 문법을 제공한다.
+
+    fun max(a: Int, b: Int): Int {
+        if (a > b) return a
+        else return b
+    }
+
+
+    차이점으로는 코틀린 if는 식으로 사용할 수 있다는 것이다.
+    if문을 식으로 사용하는 경우 else를 생략할 수 없다.
+    fun max(a: Int, b: Int) = if (a > b) a else b
+
+   코틀린은 3항연산자가 존재하지 않지만 이와같이 식을 통해 3항연산자처럼 사용할 수 있다.
+    fun rename(a: Int, b: Int) {
+        val result = if (a > b) a else b
+        println("result=$result")
+    }
     * */
 
 
