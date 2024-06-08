@@ -315,5 +315,22 @@ fun main() {
     IntArray(10){it*it}.sliceArray(2 until 5) // 4,9,16
     * */
 
+    /* 3.3.3 when 문과 여럿 중에 하나 선택하기
+    fun hexDigit(n: Int): Char {
+        when {
+            n in 0..9 -> return '0' + n
+            n in 10..15 -> return 'A' + n - 10
+            else -> return '?'
+        }
+    }
+
+    when문도 if처럼 식으로 쓸 수 있다. 이떄 if문과 마찬가지로 else를 꼭 포함시켜야한다.
+    fun hexDigit(n: Int) = when {
+        n in 0..9 ->  '0' + n
+        n in 10..15 ->  'A' + n - 10
+        else ->  '?'
+    }
+    * */
+
 
 }
