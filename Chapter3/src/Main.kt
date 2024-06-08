@@ -268,4 +268,52 @@ fun main() {
     * */
 
 
+    /* 3.3.2 범위,진행,연산
+    코틀린은 순서가 정해진 값 사이의 수열을 표현하는 몇 가지 타입을 제공한다.
+    for문을 사용하여 반복해야 할 때 이런 타입이 유용하다. 코틀린에서는 이런 타입을 범위라고 부른다.
+    범위를 만드는 가장 간단한 방법은 수 값에 대해 .. 연산자를 사용하는 것이다.
+    val chars = 'a'..'h'
+    val twoDigits = 10..99
+    val zero2One = 0.0..1.0
+
+    in연산자를 통해 어떤 값이 범위 안에 들어있는지 알 수 있다.
+    val num = readLine()!!.toInt()
+    println(num in 10..99)
+
+    이와반대인 !in 연산자도 존재한다.
+    println(num !in 10..99)
+
+    실제로는 수,Char,Boolean,String 등 모든 비교 가능한 타입에 대해 .. 연산을 쓸 수있다.
+    println("def" in "abc".."xyz") // true
+    println("zzz" in "abc".."xyz") // false
+
+    ..연산에 만들어지는 범위는 닫혀있다. 즉, 시작값과 끝 값이 범위에 포함된다.
+    끝값이 제외된 즉, 반만 닫힌 범위를 만드는 다른 연산도 있다. 이 연산은 정수 타입에서만 사용할 수 있다.
+    val twoDigits = 10 until 100 // 10..99와 같음
+
+    ..이나 until 같은 범위 연산은 시작값이 끝값보다 큰경우 빈 범위가 된다
+    println(5 in 10..1) // false
+
+    범위와 관련있는 개념으로 진행이 있다. 진행은 정해진 간격(step)만큼 떨어진 정수는 Chat 값들로 이루어진 시퀀스를 말한다.
+    일반적으로 진행이 범위보다 더 많은 옵션을 제공한다. 예를 들어 다음코드처럼 downTo 연산을 사용하면 아래로 내려가는 진행을 만들 수 있다.
+    println(5 in 10 downTo 1) //true
+    println(5 in 1 downTo 10) //false -> 빈 진행이다.
+
+    그리고 진행의 간격도 정할 수 있다. 진행의 간격(step)의 경우 양수여야한다.
+    1..10 step 3 // 1,4,7,10
+    15 downTo 9 step 2 // 15,13,11,9
+
+    진행의 원소는 시작값에 간격을 연속적으로 더해서 만들어진다. 따라서 실제로는 끝 값이 진행에 속한 원소가 아닐 수 있다.
+    1..12 step 3 // 1,4,7,10 == 1..10 step 3
+
+    범위를 사용하면 문자열이나 배열의 일부분을 뽑아낼 수 있다. subString() 함수가 닫힌 정수 범위를 받는 경우에는 두 인덱스 값을 받는 경우와 달리
+    끝값 위치에 있는 문자를 포함한다는 점을 유의해야한다.
+    "Hello, World".substring(1..4) // ello
+    "Hello, World".substring(1 until 4) // ell
+    "Hello, World".substring(1,4) // ell  -> 1 until 4 와 같음
+    IntArray(10){it*it}.sliceArray(2..5) // 4,9,16,25
+    IntArray(10){it*it}.sliceArray(2 until 5) // 4,9,16
+    * */
+
+
 }
