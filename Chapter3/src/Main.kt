@@ -355,4 +355,23 @@ fun main() {
         else -> "?"
     }
 
+    /* 3.4.1 while과 do-while 루프
+    do-while 루프는 다음 규칙에 따라 평가된다.
+    1.do와 while문 사이에 있는 루프 몸통이 실행된다.
+    2.while 키워드 다음에 있는 조건을 평가한다.
+    루프몸통을 실행한 다음 조건을 검사하므로 몸통이 최소 1번은 실행된다는 사실에 유의하자
+
+    while과 do-while 루프는 자바와 동일하다.
+    * */
+    var sum = 0
+    var num = 0;
+    do {
+        num = readLine()!!.toInt()
+        sum += num
+    }while (num != 0)
+
+    while(num !== 0){
+        break
+    }
+
 }
