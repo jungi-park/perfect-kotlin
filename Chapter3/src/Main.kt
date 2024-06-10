@@ -330,7 +330,29 @@ fun main() {
         n in 10..15 ->  'A' + n - 10
         else ->  '?'
     }
-    * */
 
+    코틀린 when은 여러 대안중 하나를 선택한다는 점에서 자바 switch문과 비슷하다.
+    but 중요한 차이는 when에서는 임의의 조건을 검사할 수 있지만 switch에서는 주어진 식의 여러 가지 값 중 하나만
+    선택할 수 있다는 점이다.
+    또한 자바 switch문은 폴스루라는 의미를 제공하지만 when 절대 폴스루를 하지 않고 조건에 맞는 코드만 실행한다.
+    폴스루 -> 어떤 조건을 만족하는 코드를 실행하고 명시적으로 break를 만날때 까지 그 이후의 모든 가지를 실행
+    * */
+    fun numverDescription(n:Int , max:Int = 100) = when(n){
+        0 -> "Zero" // n == 0 -> "Zero"
+        1,2,3 -> "Small" // n == 1 || n == 2 || n == 3 -> "Small"
+        in 4..9 -> "Medium"
+        !in 10..max -> "Large"
+        !in Int.MIN_VALUE until 0 -> "Negative"
+        else -> "Huge"
+    }
+
+    /*
+    코틀린 1.3부터는 다음과 같이 식의 대상을 변수에 연결 할 수 있다.
+    이때 정의한 변수는 when의 내부에서만 사용할 수 있고 var로는 선언할 수 없다.
+    * */
+    fun readHexDigit() = when(val n = readLine()!!.toInt()){
+        in 0..9 -> "0"+n
+        else -> "?"
+    }
 
 }
