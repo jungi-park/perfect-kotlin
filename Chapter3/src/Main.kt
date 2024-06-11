@@ -404,7 +404,7 @@ fun main() {
     // 1
     val b = IntArray(10) { it * it }
     for (i in 0..b.lastIndex) {
-        if (i % 2 == 0){
+        if (i % 2 == 0) {
             b[i] *= 2
         }
     }
@@ -419,8 +419,39 @@ fun main() {
     }
 
     /* 3.4.3 루프 제어 흐름 변경하기 : break와 continue
-    자바와 동일한 사용법
+    보통의 경우 자바와 동일한 사용법
+
+    아래의 사용법 주의
+
+     val msessage = whe{
+        guess < num -> "Too small"
+        guess > num -> "Too big"
+        else -> break // 1.4 이전에는 오류
+    }
+
+    위와 같이 사용시 when의 바깥 루프로 제어가 이동 즉, 바깥의 포문이 존재한다면 바깥의 포문이 제어됨
+    허나 이것은 1.4 버전부터 가능하기 떄문에 아래 버전을 사용할때는 레이블이 붙은 break/continue를 사용해야 한다.
     * */
+
+
+    /* 3.4.4 내포된 루프와 레이블
+    간단한 break와 continue 식은 안쪽에 내포된 루프에만 적용된다. 경우에 따라 안쪽(내포된 루프에서)에서 밖에 루프의 제어 흐름을 변경하고 싶을때가 있는데
+    이를 위해 코틀린은 자바의 임의 레이블과 비슷하지만 약간 다른 문법의 레이블 기능을 제공한다.
+
+    어떤 정수 배열 안에 어떤 정해진 순서로 정수가 배열된 하위 배열이 있는지 찾는 함수를 작성하고 싶다고 하자. 이함수는 indexOf()와 비슷한 역활을한다.
+
+    즉 아래의 함수는 하위배열의 오프셋을 찾는 과정에서 하위 배열과 배열의 원소가 일치하지 않는다는 사실을 발견하자마자 continue@outterLoop 를 사용해서
+    바깥쪽 루프의 현제 이터레이션을 끝내고 다음 이터레이션을 시작한다.
+    * */
+    fun indexOf(subarry: IntArray, array: IntArray): Int {
+        outterLoop@ for (i in array.indices) {
+            for (j in subarry.indices) {
+                if (subarry[j] != array[i + j]) continue@outterLoop
+            }
+            return i
+        }
+        return -1
+    }
 
 
 }
