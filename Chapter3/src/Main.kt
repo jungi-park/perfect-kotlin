@@ -337,9 +337,9 @@ fun main() {
     또한 자바 switch문은 폴스루라는 의미를 제공하지만 when 절대 폴스루를 하지 않고 조건에 맞는 코드만 실행한다.
     폴스루 -> 어떤 조건을 만족하는 코드를 실행하고 명시적으로 break를 만날때 까지 그 이후의 모든 가지를 실행
     * */
-    fun numverDescription(n:Int , max:Int = 100) = when(n){
+    fun numverDescription(n: Int, max: Int = 100) = when (n) {
         0 -> "Zero" // n == 0 -> "Zero"
-        1,2,3 -> "Small" // n == 1 || n == 2 || n == 3 -> "Small"
+        1, 2, 3 -> "Small" // n == 1 || n == 2 || n == 3 -> "Small"
         in 4..9 -> "Medium"
         !in 10..max -> "Large"
         !in Int.MIN_VALUE until 0 -> "Negative"
@@ -350,8 +350,8 @@ fun main() {
     코틀린 1.3부터는 다음과 같이 식의 대상을 변수에 연결 할 수 있다.
     이때 정의한 변수는 when의 내부에서만 사용할 수 있고 var로는 선언할 수 없다.
     * */
-    fun readHexDigit() = when(val n = readLine()!!.toInt()){
-        in 0..9 -> "0"+n
+    fun readHexDigit() = when (val n = readLine()!!.toInt()) {
+        in 0..9 -> "0" + n
         else -> "?"
     }
 
@@ -368,10 +368,55 @@ fun main() {
     do {
         num = readLine()!!.toInt()
         sum += num
-    }while (num != 0)
+    } while (num != 0)
 
-    while(num !== 0){
+    while (num !== 0) {
         break
     }
+
+    /* 3.4.2 for 루프와 이터러블
+    코틀린의 for 루프를 사용하면 컬렉션과 비슷하게 여러값이 들어있을 수 있는 값에 대한 루프를 실행할 수 있다.
+    일반 변수와 달리 루프 변수에는 val이나 var를 붙이지 않는다는 점과 변수는 자동으로 불변값이 된다는 점을 유의하자
+    * */
+    val a = IntArray(10) { it * it } // 0, 1, 4, 9, 16, ...
+    var sum1 = 0
+
+    for (x in a) {
+        sum += x
+    }
+
+    /*
+    코틀린은 문자열의 각 문자에 대해 루프를 직접 수행할 수 있다.
+    * */
+    val t = "TEST"
+
+    for (s in t) {
+        println(s)
+    }
+
+    /*
+    배열의 인덱스가 짝수인 경우만 두배로 변경하고 싶다면 어떻게 할까?
+    문자열과 배열에는 인덱스 범위를 제공하는 indices라는 프로퍼티가 들어있다.
+
+    코틀린에서는 어떤 타입이 iterator()라는 함수를 제공하기만 for문에 사용가능하다. (자바의 for-each 루프와 비슷하다)
+    iterator()라는 함수는 Iterator 타입을 반환한다.
+    * */
+    // 1
+    val b = IntArray(10) { it * it }
+    for (i in 0..b.lastIndex) {
+        if (i % 2 == 0){
+            b[i] *= 2
+        }
+    }
+    // 2
+    for (i in 0..b.lastIndex step 2) {
+        b[i] *= 2
+    }
+
+    // 3
+    for (i in b.indices step 2) {
+        b[i] *= 2
+    }
+
 
 }
