@@ -453,5 +453,52 @@ fun main() {
         return -1
     }
 
+    /* 3.4.5 꼬리 재귀 함수
+    코틀린은 꼬리 재귀 함수에 대한 최적화 컴파일을 지원한다.
+    이번에는 어떤 정수 배열에 대한 이진 검색을 수행하는 함수를 작성해보자. 배열이 오름차순으로 정렬돼있다고 가정하고, 검색 함수를 재귀적으로 작성하자.
+    * */
 
+    tailrec fun binIndexOf(x: Int, array: IntArray, from: Int = 0, to: Int = array.size): Int {
+        if (from == to) return -1
+        val midIndex = (from + to - 1) / 2
+        val mid = array[midIndex]
+        return when {
+            mid < x -> binIndexOf(x, array, minIndex + 1, to)
+            mid > x -> binIndexOf(x, array, from, midIndex)
+            else -> midIndex
+        }
+    }
+
+    /*
+    위의 코드는 아래와 같이 작동한다.
+    */
+    fun binIndexOf1(x: Int, array: IntArray, from: Int = 0, to: Int = array.size): Int {
+        var fromIndex = from
+        var toIndex = to
+        while (true) {
+            if (fromIndex == toIndex) return -1
+            val midIndex = (fromIndex + toIndex - 1) / 2
+            val mid = array[midIndex]
+
+            when {
+                mid < x -> fromIndex = midIndex + 1
+                mid > x -> fromIndex = midIndex
+                else -> return midIndex
+            }
+        }
+    }
+
+    /*
+    이런 변환을 적용하려면 함수가 재귀 호출 다음에 아무 동작도 수행하지 말아야 한다.
+    이말이 바로 꼬리 재귀라는 용어가 뜻하는 바다.
+    tailrec을 붙였는데 꼬리 재귀가 아니라는 사실을 컴파일러가 발견하면, 컴파일러는 경고를 표시하고 함수를 일반적인 재귀 함수로 컴파일한다.
+
+    예를 들어 다음 합계 함수는 sum(array,from+1,to)를 호출한 결과에 덧셈을 수행하기 때문에 꼬리재귀가 아니다.
+    tailrec fun sum(array: IntArray, from: Int = 0, to: Int = array.size) {
+        return if (from < to) return array[from] + sum(array, from + 1, to) else 0
+    }
+
+    tailrec을 붙였는데 재귀함수가 아니거나 꼬리재귀가 아니면 아래의 오류가 나타난다.
+    warning : A function is marked as tail-recursive but no tail calls are found
+    * */
 }
