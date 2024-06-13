@@ -501,4 +501,30 @@ fun main() {
     tailrec을 붙였는데 재귀함수가 아니거나 꼬리재귀가 아니면 아래의 오류가 나타난다.
     warning : A function is marked as tail-recursive but no tail calls are found
     * */
+
+    /* 3.5.1 예외 던지기
+    오류 조건을 신호로 보내려면 자바와 마찬가지로 throw 식에 예외 객체를 사용해야한다.
+    문자열이 잘못된 경우 어떤 폴백값을 돌려주는 대신 오류를 발생시키도록 해보자
+    * */
+    fun parseIntNumber(s: String): Int {
+        var num = 0
+
+        // 자바와 다르게 코틀린에서는 클래스 인스턴스를 생성 할 때 new 같은 특별한 구문을 사용하지 않는다.
+        // NumberFormatException("Not a number: $s") 처럼 생성자 호출도 일반 함수 호출과 똑같이 생겼다.
+        if(s.length !in 1..31) throw NumberFormatException("Not a number: $s")
+
+        for (c in s) {
+            if (c !in '0'..'1') throw NumberFormatException("Not a number: $s")
+            num = num * 2 + (c - '0')
+        }
+        return num
+    }
+
+    /*
+    프로그램은 예외를 잡아내는 핸들러를 찾는다. 예외와 일치하는 예외 핸들러가 있다면 예외 핸들러가 예외를 처리한다.
+    현재함수 내부에서 핸들러를 찾을 수 없으면 함수 실행이 종료되고 함수가 스택에서 제거된다. 그리고 호출한 쪽의 문맥 안에서 예외 핸들러 검색을 수행한다.
+    이런 경우 예외를 호출자에게 전파했다고 말한다.
+    프로그램 진입점에 이를 때까지 예외를 잡아내지 못하면 현재 스레드가 종료된다.
+    즉, 코틀린 예외 처리 단계는 기본적으로 자바와 같다.
+    * */
 }
