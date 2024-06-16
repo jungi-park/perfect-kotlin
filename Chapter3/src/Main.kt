@@ -511,7 +511,7 @@ fun main() {
 
         // 자바와 다르게 코틀린에서는 클래스 인스턴스를 생성 할 때 new 같은 특별한 구문을 사용하지 않는다.
         // NumberFormatException("Not a number: $s") 처럼 생성자 호출도 일반 함수 호출과 똑같이 생겼다.
-        if(s.length !in 1..31) throw NumberFormatException("Not a number: $s")
+        if (s.length !in 1..31) throw NumberFormatException("Not a number: $s")
 
         for (c in s) {
             if (c !in '0'..'1') throw NumberFormatException("Not a number: $s")
@@ -527,4 +527,56 @@ fun main() {
     프로그램 진입점에 이를 때까지 예외를 잡아내지 못하면 현재 스레드가 종료된다.
     즉, 코틀린 예외 처리 단계는 기본적으로 자바와 같다.
     * */
+
+    /* 3.5.2 try 문으로 예외 처리하기
+    코틀린에서 예외처리는 기본적으로 자바와 똑같은 문법의 try문을 사용한다.
+    만약 예외와 일치하는 catch블록이 없으면 예외가 전파된다.
+    * */
+    fun tryInt(default: Int): Int {
+        try {
+            return readLine()!!.toInt()
+        } catch (e: NumberFormatException) {
+            return default
+        }
+    }
+
+    /*
+    catch블록은 선언된 순서대로 예외타입을 검사하기 떄문에 어떤 타입을 처리할 수 있는 catch블록을 그 타입의 상위타입을 처리 할 수 있는 catch블록 보다 앞에 작성해야한다.
+    그렇지 않으면 상위타입을 잡아내는 핸들러가 하위타입인 예외도 모두 잡아내 버린다.
+    * */
+    fun tryIntOne(default: Int): Int {
+        try {
+            return readLine()!!.toInt()
+        } catch (e: Exception) {
+            return 0
+        } catch (e: NumberFormatException) {
+            return default // 죽은코드
+        }
+    }
+
+    /*
+    자바와 코틀린의 try문에서 가장 크게 다른점은 코틀린은 try가 식이라는 것이다.
+    이 식의 값은 (예외가 발생하지 않은 경우) try 블록의 값이거나 예외를 처리한 catch 블록의 값이 된다.
+    자바와 달리 코틀린은 검사,비검사 예외를 구분하지 않는다. 예외를 함수에 지정하도록 요구하는 것이 실재로는 생산성이 저하되고 불필요하게 긴 코드를 만들어낸다는 사실을 자바로부터
+    알았기 때문이다.
+    * */
+    fun tryIntTwo(default: Int) =
+        try {
+            readLine()!!.toInt()
+        } catch (e: NumberFormatException) {
+            default
+        }
+
+    /*
+    자바와 똑같이 마지막에 finally 블록을 사용할 수 있다.
+    * */
+
+    fun tryIntThree(default: Int) =
+        try {
+            readLine()!!.toInt()
+        } catch (e: NumberFormatException) {
+            default
+        } finally {
+            println("tryIntThree function end")
+        }
 }
