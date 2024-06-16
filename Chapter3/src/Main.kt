@@ -463,7 +463,7 @@ fun main() {
         val midIndex = (from + to - 1) / 2
         val mid = array[midIndex]
         return when {
-            mid < x -> binIndexOf(x, array, minIndex + 1, to)
+            mid < x -> binIndexOf(x, array, midIndex + 1, to)
             mid > x -> binIndexOf(x, array, from, midIndex)
             else -> midIndex
         }
