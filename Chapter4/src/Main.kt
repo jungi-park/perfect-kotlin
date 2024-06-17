@@ -1,3 +1,6 @@
+import java.net.ProtocolFamily
+import javax.management.Descriptor
+
 fun main() {
     /* 4.1.1 클래스 내부 구조
     어떤 사람에 대한 정보를 저장하는 클래스를 정의해보자.
@@ -145,7 +148,7 @@ fun main() {
         fun fullName() = "$firstName $familyName"
     }
 
-    val personSeven = PersonSeven("John","Doe")
+    val personSeven = PersonSeven("John", "Doe")
     // println(personSeven.firstName) error : Cannot access 'firstName': it is private in 'PersonSeven
     println(personSeven.fullName())
 
@@ -154,7 +157,26 @@ fun main() {
     주생성자 가시성을 지정하려면 constructor 키워드를 꼭 명시해야한다.
     * */
     class Empty private constructor() {
-        fun showMe()= println("Empty")
+        fun showMe() = println("Empty")
     }
     // Empty().showMe() error : Cannot access '<init>': it is private in 'Empty'
+
+    /* 4.1.4 내포된 클래스
+    1.함수, 프로퍼티, 생성자 외에 코틀린 클래스는 다른 클래스도 멤버로 가질 수 있다. 이런 클래스를 내포된 클래스라고 부른다.
+    2.자바와 달리, 바깥쪽 클래스는 자신에게 내포된 클래스의 비공개 멤버에 접근할 수 없다.
+    3.내포된 클래스에 inner를 붙이면 자신을 둘러싼 외부클래스의 현재 인스턴스에 접근 할 수 있다.
+    * */
+    class outerPerson(val id: Id, val age: Int) {
+
+       inner class Id(private val firstName: String, val familyName: String){
+           private fun InnerShowMe() = showMe() // (3)
+       }
+        // fun showMe() = println(id.firstName) error : Cannot access 'firstName': it is private in 'Id' (2)
+        private fun showMe() = println("외부클래스 private 함수")
+    }
+
+    /*
+    내부 클래스를 생성하기 위해서는 외부클래스의 인스턴스를 생성하고
+    외부클래스 인스턴스에서 내부클래스 생성자를 통해 초기화한다.
+    * */
 }
