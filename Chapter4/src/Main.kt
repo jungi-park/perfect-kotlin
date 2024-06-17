@@ -132,4 +132,29 @@ fun main() {
             this.fullName = fullName
         }
     }
+
+    /* 4.1.3 멤버 가시성
+    가시성은 클래스 멤버마다 다르게 지정할 수 있다.
+    가시성을 사용해 구현과 관련한 세부사항을 캡슐화함으로써 외부 코드로부터 구현 세부사항을 격리시킬 수 있으므로, 가시성 지정은 클래스 정의 시 아주 중요한 부분이다.
+    public : 디폴트 가시성으로 멤버를 어디서나 볼 수 있다.
+    internal : 멤버를 멤버가 속한 클래스가 포함된 컴파일 모듈 내부에서만 볼 수 있다.
+    protected : 멤버를 멤버가 속한 클래스와 멤버가 속한 클래스의 모든 하위 클래스 안에서 볼 수 있다.
+    private : 멤버를 멤버가 속한 클래스 내부에서만 볼 수 있다.
+    * */
+    class PersonSeven(private val firstName: String, private val familyName: String) {
+        fun fullName() = "$firstName $familyName"
+    }
+
+    val personSeven = PersonSeven("John","Doe")
+    // println(personSeven.firstName) error : Cannot access 'firstName': it is private in 'PersonSeven
+    println(personSeven.fullName())
+
+    /*
+    함수와 프로퍼티, 주생성자, 부생성자에 대해 가시성 변경자를 지원한다.
+    주생성자 가시성을 지정하려면 constructor 키워드를 꼭 명시해야한다.
+    * */
+    class Empty private constructor() {
+        fun showMe()= println("Empty")
+    }
+    // Empty().showMe() error : Cannot access '<init>': it is private in 'Empty'
 }
