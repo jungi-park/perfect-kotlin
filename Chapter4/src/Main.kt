@@ -161,22 +161,32 @@ fun main() {
     }
     // Empty().showMe() error : Cannot access '<init>': it is private in 'Empty'
 
-    /* 4.1.4 내포된 클래스
+    /* 4.1.4 내포된 클래스 -> 내포된 클래스와 내부클래스는 다르다 inner 키워드가 들어가면 내부클래스
     1.함수, 프로퍼티, 생성자 외에 코틀린 클래스는 다른 클래스도 멤버로 가질 수 있다. 이런 클래스를 내포된 클래스라고 부른다.
     2.자바와 달리, 바깥쪽 클래스는 자신에게 내포된 클래스의 비공개 멤버에 접근할 수 없다.
-    3.내포된 클래스에 inner를 붙이면 자신을 둘러싼 외부클래스의 현재 인스턴스에 접근 할 수 있다.
+    3.내포된 클래스에 inner를 붙이면 자신을 둘러싼 외부클래스의 현재 인스턴스에 접근 할 수 있다. -> inner class Id로 변경시 오류수정
+    즉, 내부 클래스는 외부클래스에 접근가능
     * */
-    class outerPerson(val id: Id, val age: Int) {
 
-       inner class Id(private val firstName: String, val familyName: String){
-           private fun InnerShowMe() = showMe() // (3)
-       }
-        // fun showMe() = println(id.firstName) error : Cannot access 'firstName': it is private in 'Id' (2)
-        private fun showMe() = println("외부클래스 private 함수")
-    }
+//    class outerPerson(val id: Id, val age: Int) {
+//        class Id(private val firstName: String, val familyName: String){
+//            private fun InnerShowMe() = showMe() // (3) error : Unresolved reference: showMe
+//        }
+//        // fun showMe() = println(id.firstName) error : Cannot access 'firstName': it is private in 'Id' (2)
+//        private fun showMe() = println("외부클래스 private 함수")
+//    }
 
     /*
     내부 클래스를 생성하기 위해서는 외부클래스의 인스턴스를 생성하고
     외부클래스 인스턴스에서 내부클래스 생성자를 통해 초기화한다.
+
+    내부 클래스 생성 -> Person().Id()
+    내포된 클래스 생성 -> Person.Id()
+
+    코틀린과 자바의 내포된 클래스는 매우 비슷하다. 주된 차이는 코틀린 내부클래스 앞에 inner 변경자가 붙는다는 점이다.
+    자바클래스는 디폴트로 내부클래스이며 static을 붙여야 내부 클래스와 외부 클래스가 연관되지 않는다. (내포된 클래스)
+    반면 코틀린은 inner가 없는 클래스는 내포된 클래스이며 외부 클래스 인스턴스와 연관되지 않는다.
     * */
+
 }
+
