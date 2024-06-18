@@ -188,5 +188,40 @@ fun main() {
     반면 코틀린은 inner가 없는 클래스는 내포된 클래스이며 외부 클래스 인스턴스와 연관되지 않는다.
     * */
 
+    /* 4.1.5 지역 클래스
+    자바처럼 코틀린에서도 함수 본문에서 클래스를 정의할 수 있다. 이런 지역클래스는 자신을 둘러싼 코드 블록 안에서만 쓰일 수 있다.
+    * */
+
+    fun test() {
+        class Point(val x: Int, val y: Int) {
+            fun shift(dx: Int, dy: Int): Point = Point(x + dx, y + dy)
+            override fun toString(): String = "($x, $y)"
+        }
+
+        val p = Point(10, 10)
+        println(p.shift(-1, 3)) // (9,13)
+    }
+
+    fun foo() {
+        // println(Point(0,0)) error : Unresolved reference: Point
+    }
+
+    /*
+    지역 함수와 비슷하게 코틀린 지역클래스도 자신을 둘러싼 코드의 선언에 접근할 수 있다.
+    지역 클래스는 클래스 본문 안에서 자신이 접근할 수 있는 값을 포획하고 변경 할 수 있다.
+    코틀린과 달리 자바에서는 포획한 변수의 값을 변경 할 수 없다.
+    * */
+
+    fun testOne() {
+        var x = 1
+
+        class Counter {
+            fun increment() {
+                x++
+            }
+        }
+        Counter().increment()
+        println(x) // 2
+    }
 }
 
