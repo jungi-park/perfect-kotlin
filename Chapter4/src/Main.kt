@@ -292,5 +292,14 @@ fun main() {
         s = readLine()
         // println(s.length) error : Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type String
     }
+
+    /* 4.2.3 널 아님 단언 연산자
+    !! 연산자는 널 아님 단언 이라고도 부르는데 KotlinNullPointException 예외를 발생 시킬 수 있는 연산자이다.
+    이 연산자가 붙은 식의 타입은 원래 타입의 널이 될 수 없는 버전이다.
+    !! 연산자가 붙은 식은 null을 참조할때 예외를 던지는 동작을 부활시킨다.
+
+    일반적으로 널 아님 단언문 사용은 사용하지 않는 것이 좋다.
+    * */
+    val n = readLine()!!.toInt()
 }
 
