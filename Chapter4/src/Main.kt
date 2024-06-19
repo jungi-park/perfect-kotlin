@@ -301,5 +301,24 @@ fun main() {
     일반적으로 널 아님 단언문 사용은 사용하지 않는 것이 좋다.
     * */
     val n = readLine()!!.toInt()
+
+    /* 4.2.4 안전한 호출 연산자
+    널이 될수 있는 값은 널이 될수 없는 값의 메서드를 사용할수없다. 하지만 안전 호출 연산을 사용하면 이런 제약을 피할 수 있다.
+    자바스크립트에서 제공하는 null처리 연산자처럼 왼쪽이 null이면 null을 반환하고 아니라면 오른쪽으로 진행된다.
+    * */
+
+    fun readInt() = readLine()?.toInt()
+
+    /*
+    안전한 호출 연산자가 널을 반환 할 수 있기 떄문에 이런 연산이 반환하는 값의 타입은 null을 고려해야한다.
+    * */
+    fun testrr(){
+        val n = readInt()
+        if (n != null){
+            println(n+1)
+        }else{
+            println("no value")
+        }
+    }
 }
 
