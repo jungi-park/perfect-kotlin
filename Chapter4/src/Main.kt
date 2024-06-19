@@ -231,7 +231,7 @@ fun main() {
 
     아래의 isLetterString 함수의 매개변수는 String인 참조값을 매개변수로 받지만 null은 들어갈 수 없다.
     * */
-    fun isLetterString(s:String):String{
+    fun isLetterString(s: String): String {
         return s
     }
 
@@ -253,5 +253,44 @@ fun main() {
     중요 -> 널이 될수 있는 타입은 원래 타입에 들어있는 어떤 프로퍼티나 메서드도 제공하지 않는다.
     허나 코틀린의 확장 메커니즘을 활용해 자체적인 메서드와 프로퍼티를 제공한다.
     * */
+
+    /* 4.2.2 널 가능성과 스마트 캐스트
+    널이 될 수 있는 값을 처리하는 가장 직접적인 방법은 해당 값을 조건문을 사용해 null과 비교하는 것이다.
+    s타입 자체를 바꾸지는 않았지만 null에 대한 검사를 추가하면 코드가 어떤 이유에서인지 컴파일된다. 스마트 캐스트라고 불리는 코틀린 기능이 이런일을 가능하게 해준다.
+    * */
+    fun isLetterStr(s: String?): Boolean {
+        if (s == null) return false
+        // kotlin.String(으)로 스마트 형 변환
+        if (s.isEmpty()) return false
+
+        for (c in s) {
+            if (!c.isLetter()) return false
+        }
+        return true
+    }
+
+    // 스마트캐스트는 when이나 루프같은 조건 검사가 들어가는 다른 문이나 식 안에서도 작동한다.
+    fun descreibeNumber(n: Int?) = when (n) {
+        null -> null
+        // 밑에 가지에서는 null이 될 수 없다.
+        in 0..10 -> "small"
+        in 11..100 -> "large"
+        else -> "out of range"
+    }
+
+    // || 이나 && 연산의 오른쪽에서도 같은 일이 벌어진다.
+    fun isSingleChar(s: String?) = s != null && s.length == 1
+
+    /*
+    불변 지역 변수는 초기화후 변경이 없으므로 항상 스마트 캐스트를 사용할 수 있다.
+    하지만 널 검사와 사용 지점 사이에서 값이 변경되는 경우 스마트 캐스트가 작동하지 않는다.
+    * */
+
+    var s = readLine() // String?
+    if (s !== null) {
+        // 변수 값이 바뀌므로 스마트 캐스트를 쓸 수 없음
+        s = readLine()
+        // println(s.length) error : Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type String
+    }
 }
 
