@@ -327,5 +327,24 @@ fun main() {
     * */
 
     val i = readLine()?.toInt() ?: 0
+
+    /* 4.3.1 최상위 프로퍼티
+    클래스나 함수와 마찬가지로 최상위 수준에 프로퍼티를 정의할 수도 있다.
+    이런 경우 프로퍼티는 전역 변수나 상수와 비슷한 역할을 한다.
+    * */
+
+    /*
+    // util.kt
+    val prefix = "Hello"
+
+    // main.kt
+
+    import util.prefix
+
+    fun main(){
+    val name = prefix
+    }
+    * */
+
 }
 
