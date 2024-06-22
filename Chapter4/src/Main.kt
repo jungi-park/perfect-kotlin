@@ -1,3 +1,4 @@
+import java.io.File
 import java.net.ProtocolFamily
 import javax.management.Descriptor
 
@@ -312,11 +313,11 @@ fun main() {
     /*
     안전한 호출 연산자가 널을 반환 할 수 있기 떄문에 이런 연산이 반환하는 값의 타입은 null을 고려해야한다.
     * */
-    fun testrr(){
+    fun testrr() {
         val n = readInt()
-        if (n != null){
-            println(n+1)
-        }else{
+        if (n != null) {
+            println(n + 1)
+        } else {
             println("no value")
         }
     }
@@ -346,5 +347,42 @@ fun main() {
     }
     * */
 
+    /* 4.3.2 늦은 초기화
+    클레스를 인스턴스화 할 때 프로퍼티를 초기화해야 한다는 요구 사항이 불필요하게 엄격할때가 있다.
+    예를 들어 단위 테스트를 준비하는 코드나 의존 관계 주입에 의해 대입돼야 하는 프로퍼티가 이런 종류에 속한다.
+    이런 경우 생성자에서는 초기화되지 않은 상태라는 사실을 의미하는 디폴트값을 대입하고 실제 값을 필요할 때 대입할 수도 있다.
+    예를 들어 다음 코드를 생각해보자
+    * */
+
+    class Content {
+        var text: String? = null
+
+        fun loadFile(file:File){
+            text = file.readText()
+        }
+    }
+
+    fun getContentSize(content: Content) = content.text?.length ?: 0
+
+    /*
+    위와 같은 예제의 단점은 실제 값이 항상 사용전에 초기화되므로 절대 널이 될 수 없는 값이라는 사실을 알고 있음에도 늘 널 가능성을 처리해야한다는 점이다.
+    코틀린은 이런 패턴을 지원하는 lateinit 키워드를 제공한다.
+    lateinit 키워드가 붙은 프로퍼티를 읽으려 시도할때 프로그램이 프로퍼티가 초기화됐는지 검사해서 초기화 되지 않은 경우 UninitializedPropertyAccessException 예외를
+    던진다는 점을 제외하면 일반 프로퍼티와 똑같다.
+    프로퍼티를 lateinit로 만들기 위해서는 몇가지 조건이 있다.
+    1. 프로퍼티가 코드에서 변경될 수 있는 지점이 여러곳이므로 var로 지정해야한다.
+    2. 프로퍼티 타입은 null이 아닌 타입이어야 하고 원시값이 아니어야한다. lateinit 프로퍼티는 내부적으로 초기화되지 않은 상태를 표현하기 위해 null을 사용하는 널이 될 수있는 값으로 표현되기 떄문이다.
+    3. lateinit 프로퍼티를 정의하면서 초기화 식을 지정해 값을 바로 대입할 수 없다. 이런 대입을 허용하면 애초에 lateinit을 지정하는 의미가 없기 때문이다.
+    * */
+
+    class ContentLate {
+        lateinit var text: String
+
+        fun loadFile(file:File){
+            text = file.readText()
+        }
+    }
+
+    fun getContentSizeLate(content: ContentLate) = content.text.length
 }
 
