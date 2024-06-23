@@ -2,6 +2,7 @@ import java.io.File
 import java.net.ProtocolFamily
 import java.util.*
 import javax.management.Descriptor
+import kotlin.reflect.KProperty
 
 fun main() {
     /* 4.1.1 클래스 내부 구조
@@ -440,6 +441,7 @@ fun main() {
 
     위임객체는 by 다음에 위치하며 다양한 위임객체가 있다. 지금 현재 위임 프로퍼티에 대해서는 스마트 캐스트를 사용할 수 없다.
     위임은 구현이 다 다를 수 있기 때문에 커스텀 접근자로 정의된 프로퍼티처럼 다뤄진다.
+    그리고 이말은 위임을 사용한 지역변수의 경우에도 스마트 캐스트를 쓸 수 없다는 의미이다.
     * */
 
     val text by lazy {
@@ -455,6 +457,29 @@ fun main() {
         }
     }
 
+    /*
+    코틀린에서 스마트 캐스트를 사용할 수 없는 이유는 주로 위임 프로퍼티(delegate property)의 특성과 관련이 있습니다.
+    위임 프로퍼티는 프로퍼티의 값 읽기와 쓰기 동작을 위임 객체(delegate object)에 맡기기 때문에
+    컴파일러가 해당 프로퍼티의 실제 타입을 추론하고 보장하는 것이 어렵습니다.
+    구체적인 이유는 다음과 같습니다:
+    동적 동작: 위임 객체는 프로퍼티의 값을 동적으로 결정할 수 있습니다. 즉, 프로퍼티의 값을 읽을 때마다 다른 값을 반환할 수 있습니다. 이러한 동적 동작은 컴파일 시점에 프로퍼티의 타입을 고정하기 어렵게 만듭니다.
+    프로퍼티의 변경 가능성: 위임 객체는 언제든지 프로퍼티의 값을 변경할 수 있습니다. 예를 들어, 다음과 같은 위임 객체가 있다고 가정해 봅시다:
+    * */
+    class Delegate {
+        private var value: Any = "Initial Value"
+
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Any {
+            return value
+        }
+
+        operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Any) {
+            this.value = value
+        }
+    }
+
+    class Example {
+        var prop: Any by Delegate()
+    }
 
 }
 
