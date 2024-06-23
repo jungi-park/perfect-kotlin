@@ -1,5 +1,6 @@
 import java.io.File
 import java.net.ProtocolFamily
+import java.util.*
 import javax.management.Descriptor
 
 fun main() {
@@ -357,7 +358,7 @@ fun main() {
     class Content {
         var text: String? = null
 
-        fun loadFile(file:File){
+        fun loadFile(file: File) {
             text = file.readText()
         }
     }
@@ -378,11 +379,57 @@ fun main() {
     class ContentLate {
         lateinit var text: String
 
-        fun loadFile(file:File){
+        fun loadFile(file: File) {
             text = file.readText()
         }
     }
 
     fun getContentSizeLate(content: ContentLate) = content.text.length
+
+
+    /* 4.3.3 커스텀 접근자 사용하기
+    커스텀 접근자는 프로퍼티 값을 읽거나 쓸때 호출되는 특별한 함수다.
+    게터는 정의 끝에 붙으며 기본적으로 이름 대신 get이라는 키워드가 붙은 함수처럼 보인다.
+    하지만 이런 프로퍼티를 읽으면 프로그램이 자동으로 게터를 호출한다.
+
+    추가적으로 fullName 값을 초기화 해주지 않았는데 그 이유는 뒷받침하는 필드가 없기 때문인데
+    즉, fullName이 어떠한 값을 가지고 있는 것이아니라 매번 해당 값을 읽을때 firstName + familyName 값을 계산해서 반환하고 있기 떄문이다.
+    이와 계산에 의해서 값을 돌려주는 프로퍼티의 경우 계산 프로퍼티라고 말하며 뒷받침 필드가 필요하지 않다.
+
+    뒷받침하는 필드 즉, 여기서는   val name =  firstName + familyName 가 뒷받침 필드를 가지고 있으며
+    커스텀 getter와 setter를 정의할 때는 field 키워드를 사용하여 이 뒷받침하는 필드에 접근할 수 있습니다.
+    * */
+
+    class Personfour(val firstName: String, val familyName: String) {
+        val fullName: String
+            get() = firstName + familyName
+        val name = firstName + familyName
+            get() {
+                println(field)
+                return field
+            }
+    }
+
+    /*
+    게터뿐만 아니라 setter도 존재한다.
+    일반적으로 파라미터이름은 value로 하며 타입 추측에 의해서 반환 타입을 적지 않아도 된다.
+
+    프로퍼티 접근자에 별도로 가시성 변경자를 붙일 수도 있다.
+    바깥에서 볼때는 lastChange 값을 변경하지 못하고 불변인것으로 보이지만 아래와 같이 사용할 수 있다.
+    lateinit 프로퍼티의 경우 할상 자동으로 접근자가 생성되기 때문에 커스텀 접근자를 정의할 수 없다
+    주생성자에 들어있는 매개변수의 커스텀 접근자를 생성하고 싶은경우 val,var 키워드를 제거하여 자동으로 생성자를 만들지 말고
+    프로퍼티에 직접 만들고 값을 넣어 사용해야한다.
+    * */
+    class Personfive(name:String) {
+        var lastChange: Date? = null
+            private set
+
+        var name: String = name
+            set(value) {
+                lastChange = Date()
+                field = value
+            }
+    }
+
 }
 
