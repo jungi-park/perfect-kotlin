@@ -430,6 +430,31 @@ fun main() {
                 field = value
             }
     }
+    /* 4.3.4 지연 계산 프로퍼티와 위임
+    lateinit 변경자를 사용해 지연 초기화를 구현하는 방법을 살펴봤다.
+    하지만 어떤 프로퍼티를 처음 읽을 때까지 그값에 대한 계산을 미뤄두고 싶을 때가 자주 있다.
+    코틀린에서는 lazy 프로퍼티를 통해 이를 달성할 수 있다.
+
+    아래의 코드는 commend 값이 print data가 되는것이 아니면 text는 값을 계산하지않는다.
+    계산된 이후에는 text 프로퍼티 값에 저장되고 이후에는 저장된 값을 읽게 된다.
+
+    위임객체는 by 다음에 위치하며 다양한 위임객체가 있다. 지금 현재 위임 프로퍼티에 대해서는 스마트 캐스트를 사용할 수 없다.
+    위임은 구현이 다 다를 수 있기 때문에 커스텀 접근자로 정의된 프로퍼티처럼 다뤄진다.
+    * */
+
+    val text by lazy {
+        File("data.txt").readText()
+    }
+
+    fun textText(){
+        while (true){
+            when (val commend = readLine() ?: return){
+                "print data" -> println(text)
+                "exit" -> return
+            }
+        }
+    }
+
 
 }
 
