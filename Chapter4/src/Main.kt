@@ -583,8 +583,60 @@ fun main() {
     * */
 
 
+    /* 4.4.3 객체 식
+    코틀린은 명시적인 선언 없이 객체를 바로 생성할 수 있는 특별한 식을 제공한다.
+    객체 식은 자바 익명 클래스와 아주 비슷하다.
+    * */
 
+    fun midPoint(xRange: IntRange,yRange: IntRange) = object {
+        val x = (xRange.first + xRange.last)
+        val y = (yRange.first + yRange.last)
+    }
 
+    val midPointObj = midPoint(1..5,2..6)
+
+    println("${midPointObj.x},${midPointObj.y}")
+
+    /*
+    객체 식은 이름이 없는 객체 정의처럼 보인다. 그리고 객체도 식이므로 앞의 예제처럼 객체 식이 만들어내는 값을 변수에 대입할 수 있다.
+    클래스나 객체 식과 달리 객체를 함수 안에서 정의할 수는 없다.
+
+     fun pintMiddle(xRange: IntRange,yRange: IntRange){
+
+        object MidPoint{ // error: named object "MidPoint" is a singleton and cannot be local
+            val x = (xRange.first + xRange.last)
+            val y = (yRange.first + yRange.last)
+        }
+    }
+    * */
+
+    /*
+    코틀린 설계자들이 이렇게 결정한 이유는 객체 선언이 싱글턴을 표현하지만 지역 객체들은 자신을 둘러싼 바깥 함수가 호출될 때마다 다시 생성돼야하기 때문이다.
+    * */
+
+    /*
+    익명 객체 타입은 지역 선언이나 비공개 선언에만 전달될 수 있다. 예를 들어 midPointObj 함수를
+    최상위 함수로 정의하면 객체 멤버에 접근할 때 컴파일 오류가 발생한다.
+
+    fun midPoint(xRange: IntRange,yRange: IntRange) = object {
+        val x = (xRange.first + xRange.last)
+        val y = (yRange.first + yRange.last)
+    }
+    fun tess(){
+        val midPointObj = midPoint(1..5,2..6)
+
+        //error: Unresolved reference: x
+        //error: Unresolved reference: y
+        println("${midPointObj.x},${midPointObj.y}")
+    }
+
+    여기서 midPoint() 함수의 타입은 객체 식에 해당하는 익명 객체타입이 아니라 객체 식에 지정된 상위 타입이된다.
+    하지만 예제 객체 식에는 상위타입을 명시하지 않았기 때문에 Any가 된다 그래서 x 값과 y값을 찾을 수 없는것이다.
+    val midPointObj: Any
+
+    자바 익명클래스와 달리 객체 식은 클래스 상속과 조합했을 때 더 강력해진다. 객체식은 기존 클래스의 하위 클래스를 선언하지 않고도
+    기존 클래스를 약간만 변경해 기술하는 간결한 방법을 제공한다.
+    * */
 
 }
 
