@@ -524,7 +524,7 @@ fun main() {
 
      class APP private constructor(val name:String){
         object Factory(){
-            fun creatre(arg:Array<String>):APP?{
+            fun create(arg:Array<String>):APP?{
                 val name = arg.firstOrNull() ?: return null
                 return APP(name)
             }
@@ -535,6 +535,51 @@ fun main() {
         val app = APP.Factory.create(arg) ?: return
         println(App Start ${app.name})
     }
+
+    이런 경우 별도로 import APP.Factory.create 로 팩토리 메서드를 임포트 하지 않는 한 매번 내포된 객체의 이름을 지정해야한다.
+    코틀린에서는 Factory 메서드를 동반객체로 정의함으로써 이런 문제를 해결할 수 있다.
+    동반 객체는 companion 이라는 키워드를 덧붙인 내포객체이다.
+    동반객체는 내포객체와 동일하지만 한가지 예외가 있다. 동반객체의 멤버에 접근할 떄는 동반객체의 이름을 사용하지 않고 동반 객체가 들어있는
+    외부클래스의 이름을 사용할 수 있다. 위 코드를 아래와 같이 간결하게 수정할 수 있다.
+
+
+     class APP private constructor(val name:String){
+        companion object Factory(){
+            fun create(arg:Array<String>):APP?{
+                val name = arg.firstOrNull() ?: return null
+                return APP(name)
+            }
+        }
+    }
+
+    fun main(arg:Array<String>){
+        val app = APP.create(arg) ?: return
+        println(App Start ${app.name})
+    }
+
+    동반객체의 경우 정의에서 아예 이름을 생략할 수 있다.
+
+     class APP private constructor(val name:String){
+        companion object{
+            fun create(arg:Array<String>):APP?{
+                val name = arg.firstOrNull() ?: return null
+                return APP(name)
+            }
+        }
+    }
+
+    동반객체의 이름을 생략한 경우 동반 객체의 디폴트 이름은 Companion으로 가정한다.
+    import APP.Companion.create
+
+    companion 변경자는 최상위 객체 앞이나 다른객체 안에 내포된 객체 안에 붙이는것이 금지된다.
+    최상위 객체에 붙이는 것은 동반객체를 연결할 클래스 정의가 없고
+    객체안에 객체의 경우 companion를 붙이는 것은 불필요한 중복이기 때문이다.
+
+    코틀린의 동반 객체를 자바의 정적 문맥과 대응하는 것 처럼 생각할 수도 있다.
+    자바 정적멤버와 마찬가지로 동반 객체의 멤버도 외부 클래스와 똑같은 전역 상태를 공유하며 외부 클래스의 모든 멤버에 멤버 가시성과 무관하게 접근할 수 있다.
+    하지만 중요한 차이는 코틀린 동반객체는 인스턴스라는 점이다. 이로인해 자바의 정적 멤버보다 코틀린 동반 객체가 더 유연하다
+    -> 타입상속이 가능하고 일반 객체처럼 여기저기에 전달될 수 있기 때문이다.
+    또한 동반 객체 안에서 init블럭을 사용할 수 있다는 것도 알아두자
     * */
 
 
