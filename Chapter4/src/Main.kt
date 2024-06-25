@@ -512,6 +512,31 @@ fun main() {
     패키지: 코틀린 파일은 특정 패키지에 속할 수 있습니다. 파일의 상단에 package 선언을 사용하여 패키지를 지정할 수 있습니다.
     * */
 
+    /* 4.4.2 동반 객체
+    내포된 클래스와 마찬가지로 내포 객체도 인스턴스가 생기면 자신을 둘러싼 클래스인 비공개 멤버에 접근할 수있다.
+    이런 특성은 예를 들어 팩토리 디자인 패턴을 쉽게 구현하는 경우 유용하게 활용할 수 있다.
+    생성자를 직접 사용하고 싶지 않을때가 있다. 예를 들어 생성자를 사용하면 어떤 사전 검사 결과에 따라 널을 반환하거나
+    (같은 상위 타입에 속하는) 다른 타입의 객체를 반환할 수 없다. 생성자는 항상 자신이 정의퇸 클래스의 객체를 반환하거나 예외를 던질 수만 있기
+    때문이다.
+
+    이를 해결하는 방법은 생성자를 비공개로 지정해 클래스 외부에서 사용할 수 없게 한 다음, 내포된 객체에 팯토리 메서드 역할을 수행하는
+    함수를 정의하고 그 함수 안에서 필요에 따라 객체의 생성자를 호출하는 것이다.
+
+     class APP private constructor(val name:String){
+        object Factory(){
+            fun creatre(arg:Array<String>):APP?{
+                val name = arg.firstOrNull() ?: return null
+                return APP(name)
+            }
+        }
+    }
+
+    fun main(arg:Array<String>){
+        val app = APP.Factory.create(arg) ?: return
+        println(App Start ${app.name})
+    }
+    * */
+
 
 
 
