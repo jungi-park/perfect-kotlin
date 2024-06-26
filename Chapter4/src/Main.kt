@@ -638,5 +638,26 @@ fun main() {
     기존 클래스를 약간만 변경해 기술하는 간결한 방법을 제공한다.
     * */
 
+    /* 5.1.1 고차 함수
+    앞에서 이미 람다를 통해 계산을 수행하는 몇가지 예제를 살펴봤다.
+    파라미터로 함수타입을 받아 사용하는 경우를 살펴보자
+    아래코드는 곱셈이나 최댓갑을 구하는 함수를 일반화해서 사용하고 있다.
+    * */
+    val squares = IntArray(5){n -> n*n}
+
+    fun aggregate(numbers : IntArray, op :(Int,Int) -> Int):Int{
+        var result = numbers.firstOrNull() ?: throw IllegalArgumentException("Empty array")
+
+        for(i in 1..numbers.lastIndex) result = op(result,numbers[i])
+
+        return result
+    }
+
+    fun sum(numbers : IntArray) = aggregate(numbers,{result, op -> result+op})
+
+    fun max(numbers : IntArray) = aggregate(numbers,{result, op -> if (result>op) op else result })
+
+    sum(intArrayOf(1,2,3)) // 6
+    max(intArrayOf(1,2,3)) // 3
 }
 
