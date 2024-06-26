@@ -659,5 +659,44 @@ fun main() {
 
     sum(intArrayOf(1,2,3)) // 6
     max(intArrayOf(1,2,3)) // 3
+
+    /* 5.1.2 함수 타입
+    함수 타입은 함수처럼 쓰일 수 있는 값들을 표시하는 타입이다.
+    문법적으로 함수 시그니처와 비슷하며, 다음과 같이 두가지 부분으로 구성된다.
+    1. 괄호로 둘러싸인 파라미터 타입 목록은 함숫값에 전달될 데이터의 종류와 수를 정의한다.
+    2. 반환 타입은 함수 타입의 함숫값을 호출하면 될려받게 되는 타입을 명시한다.
+    반환 타입을 반드시 명시해야한다  () -> Unit
+    ex) (Int,Int) -> Boolean
+
+    코틀린 1.4부터는 코틀린 인터페이스 앞에 fun을 붙이면 자바의 SAM(Single Abstract Method) 인터페이스와 같이 사용할 수 있다.
+
+    fun interface StringConsumer(){
+        fun accept(s:String)
+    }
+
+    val consume = StringConsumer{s -> print(s)}
+
+    함수타입의 값을 함수의 파라미터에만 사용할 수 있는 것이 아니라 모든 곳에서 사용가능하다.
+    * */
+
+    val lessThan : (Int,Int)-> Boolean = {a,b -> a<b}
+
+    /*
+    함수 타입도 널이 될 수 있는 타입으로 지정할 수 있다. 이럴 때는 함수 타입 전체를 괄호로 둘러싼 다음에 물음표를 붙인다.
+    괄호를 붙이지 않으면 의미가 완전히 달라지니 주의해야한다 (a:Int,b:Int)->Int? (null을 포함한 Int라는 의미가됨)
+    * */
+
+    fun measure(op: ((a:Int,b:Int)->Int)?){
+    }
+
+    /*
+    함수 타입을 다른 함수타입에 내포시켜서 고차함수를 정의할 수 있다.
+
+    타입 (i) -> R
+    구현 { i -> R }
+    * */
+
+    val high : (Int) -> (Int)-> Int = {n -> { i-> i+n}}
+
 }
 
