@@ -1,6 +1,7 @@
 import java.io.File
 import java.net.ProtocolFamily
 import java.util.*
+import java.util.concurrent.locks.Condition
 import javax.management.Descriptor
 import kotlin.reflect.KProperty
 
@@ -421,7 +422,7 @@ fun main() {
     주생성자에 들어있는 매개변수의 커스텀 접근자를 생성하고 싶은경우 val,var 키워드를 제거하여 자동으로 생성자를 만들지 말고
     프로퍼티에 직접 만들고 값을 넣어 사용해야한다.
     * */
-    class Personfive(name:String) {
+    class Personfive(name: String) {
         var lastChange: Date? = null
             private set
 
@@ -448,9 +449,9 @@ fun main() {
         File("data.txt").readText()
     }
 
-    fun textText(){
-        while (true){
-            when (val commend = readLine() ?: return){
+    fun textText() {
+        while (true) {
+            when (val commend = readLine() ?: return) {
                 "print data" -> println(text)
                 "exit" -> return
             }
@@ -588,12 +589,12 @@ fun main() {
     객체 식은 자바 익명 클래스와 아주 비슷하다.
     * */
 
-    fun midPoint(xRange: IntRange,yRange: IntRange) = object {
+    fun midPoint(xRange: IntRange, yRange: IntRange) = object {
         val x = (xRange.first + xRange.last)
         val y = (yRange.first + yRange.last)
     }
 
-    val midPointObj = midPoint(1..5,2..6)
+    val midPointObj = midPoint(1..5, 2..6)
 
     println("${midPointObj.x},${midPointObj.y}")
 
@@ -643,22 +644,22 @@ fun main() {
     파라미터로 함수타입을 받아 사용하는 경우를 살펴보자
     아래코드는 곱셈이나 최댓갑을 구하는 함수를 일반화해서 사용하고 있다.
     * */
-    val squares = IntArray(5){n -> n*n}
+    val squares = IntArray(5) { n -> n * n }
 
-    fun aggregate(numbers : IntArray, op :(Int,Int) -> Int):Int{
+    fun aggregate(numbers: IntArray, op: (Int, Int) -> Int): Int {
         var result = numbers.firstOrNull() ?: throw IllegalArgumentException("Empty array")
 
-        for(i in 1..numbers.lastIndex) result = op(result,numbers[i])
+        for (i in 1..numbers.lastIndex) result = op(result, numbers[i])
 
         return result
     }
 
-    fun sum(numbers : IntArray) = aggregate(numbers,{result, op -> result+op})
+    fun sum(numbers: IntArray) = aggregate(numbers) { result, op -> result + op }
 
-    fun max(numbers : IntArray) = aggregate(numbers,{result, op -> if (result>op) op else result })
+    fun max(numbers: IntArray) = aggregate(numbers) { result, op -> if (result > op) op else result }
 
-    sum(intArrayOf(1,2,3)) // 6
-    max(intArrayOf(1,2,3)) // 3
+    sum(intArrayOf(1, 2, 3)) // 6
+    max(intArrayOf(1, 2, 3)) // 3
 
     /* 5.1.2 함수 타입
     함수 타입은 함수처럼 쓰일 수 있는 값들을 표시하는 타입이다.
@@ -679,14 +680,14 @@ fun main() {
     함수타입의 값을 함수의 파라미터에만 사용할 수 있는 것이 아니라 모든 곳에서 사용가능하다.
     * */
 
-    val lessThan : (Int,Int)-> Boolean = {a,b -> a<b}
+    val lessThan: (Int, Int) -> Boolean = { a, b -> a < b }
 
     /*
     함수 타입도 널이 될 수 있는 타입으로 지정할 수 있다. 이럴 때는 함수 타입 전체를 괄호로 둘러싼 다음에 물음표를 붙인다.
     괄호를 붙이지 않으면 의미가 완전히 달라지니 주의해야한다 (a:Int,b:Int)->Int? (null을 포함한 Int라는 의미가됨)
     * */
 
-    fun measure(op: ((a:Int,b:Int)->Int)?){
+    fun measure(op: ((a: Int, b: Int) -> Int)?) {
     }
 
     /*
@@ -696,7 +697,72 @@ fun main() {
     구현 { i -> R }
     * */
 
-    val high : (Int) -> (Int)-> Int = {n -> { i-> i+n}}
+    val high: (Int) -> (Int) -> Int = { n -> { i -> i + n } }
+
+
+    /* 5.1.3 람다와 익명 함수
+    {result, op -> result+op} 라는식을 람다라고 부른다.
+    람다는 result, op 와같은 파라미터 목록과  result+op 의 본문으로 이루어져 있다.
+    함수 정의와 달리 반환 타입을 지정할 필요가 없으며, 반환타입지 자동으로 추론된다. 그리고 람다 본문에서 맨 마지막에 있는 식이 람다의 결괏값이 된다.
+
+    코틀린은 인자가 하나밖에 없는 람다를 특별히 단순화해 사용할 수 있는 문법을 제공한다.
+    람다인자가 하나인 경우에는 파라미터 목록과 화살표 기호를 생략하고, 유일한 파라미터는 미리 정해진 it이라는 이름으로 사용할 수 있다.
+    * */
+    fun check(s: String, condition: (Char) -> Boolean): Boolean {
+        for (c in s) {
+            if (condition(c)) return false
+        }
+        return true
+    }
+
+    println(check("Hello") { c -> c.isLetter() }) // true
+    println(check("Hello") { it.isLowerCase() }) // false
+
+    /*
+    함숫값을 만드는 다른 방법은 익명함수를 사용하는것이다.
+    람다와 달리 익명 함수는 반환타입을 적을수 있으며 람다와 달리 익명함수를 인자 목록 밖으로 보낼 수 없다.
+    * */
+
+//    fun sum(numbers : IntArray) = aggregate(numbers){result, op -> result+op}
+
+    fun sumFun(numbers: IntArray) = aggregate(numbers, fun(result, op): Int { return result + op })
+
+    /*
+    지역 함수와 마찬가지로 람다나 익명함수는 자신을 포함하는 외부에 정의된 변수에 접근할 수 있다.
+    * */
+
+    fun foreach(a: IntArray, action: (Int) -> Unit) {
+        for (n in a) {
+            action(n)
+        }
+    }
+
+    fun out(){
+        var sum = 0
+        foreach(intArrayOf(1,2,3,4)){
+            sum += it
+        }
+        println(sum) // 10
+    }
+    /* 5.1.4 호출 가능 참조
+
+    앞에서 람다와 익명함수를 이용해 함수값을 만드는 방법을 살펴봤다.
+
+    함수 값이란 ->
+    함수 값(Function Value)은 변수를 함수로 사용할 수 있는 개념을 의미합니다.(함숫값을 만드는 방법은 람다,익명함수를 사용하는것이다.)
+    코틀린과 같은 현대 프로그래밍 언어에서는 함수도 일종의 값으로 취급되어, 변수에 저장하거나 다른 함수의 인자로 전달할 수 있습니다.
+    이러한 기능은 함수형 프로그래밍의 중요한 특징 중 하나입니다.
+
+    하지만 이미 함수 정의가 있고, 이 함수 정의를 함숫값처럼 고차함수에 넘기고 싶다면 어떻게 해야할까?
+    바로 호출 가능 참조(::)를 사용하는것이다.
+    ::isCapitalLetter라는 식은 이 식이 가리키는 isCapitalLetter() 함수와 같은 동작을 하는 함숫값을 표현해준다.
+    * */
+
+    fun isCapitalLetter(c:Char) = c.isUpperCase() && c.isLetter()
+
+    println(check("Hello"){c ->isCapitalLetter(c)})
+    println(check("Hello",::isCapitalLetter))
+
 
 }
 
