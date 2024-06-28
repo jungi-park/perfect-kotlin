@@ -810,7 +810,5 @@ fun main() {
     참조 -> https://munseong.dev/kotlin/inlinefunction/
     * */
 
-
-
 }
 
