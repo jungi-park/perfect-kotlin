@@ -810,5 +810,57 @@ fun main() {
     참조 -> https://munseong.dev/kotlin/inlinefunction/
     * */
 
+      /* 5.1.6 비지역적 제어 흐름
+    람다를 사용하면 return 문 등과 같이 일반적인 제어 흐름을 깨는 명령을 사용할 때 문제가 생긴다.
+
+     return문은 디폴트로 자신을 둘러싸고 있는 fun, get, set으로 정의된 가장 안쪽 함수로부터 제어 흐름을 반환시킨다.
+     따라서 아래의 예제는 실제로는 main 함수로부터 반환을 시도하는 코드가 된다. 이런 문을 비지역적 return이라고 부른다.
+    * */
+
+    fun forEach(a: IntArray, action: (Int) -> Unit) {
+        for (n in a) action(n)
+    }
+
+
+    fun main() {
+        forEach(intArrayOf(1, 2, 3, 4)) {
+            // if (it < 2 || it > 3) return // error: 'return' is not allowed hereㅍ
+            println(it)
+        }
+    }
+
+    /*
+    이런 경우를 해결하는 방법은 람다 대신 익명 함수를 사용하는 것이다.
+    * */
+    fun ok() {
+        forEach(intArrayOf(1, 2, 3, 4), fun(it: Int) {
+            if (it < 2 || it > 3) return
+            println(it)
+        })
+    }
+
+    /*
+    람다 자체로부터 제어 흐름을 반환하고 싶다면 break나 continue에 대해 레이블을 사용했던 것처럼,
+    return 문에 문맥 이름을 추가해야 한다. 일반적으로 함수 리터럴 식에 이름을 붙여서 문맥 이름을 만들 수 있다.
+    아래 코드는 myFun이라는 레이블을 action 변수 초기화 앞부분에 붙인다
+    * */
+
+    val action: (Int) -> Unit = myFun@ {
+        if (it < 2 || it > 3) return@myFun
+        println(it)
+    }
+
+    /*
+    하지만 람다를 고차 함수의 인자로 넘기는 경우에는 레이블을 명시적으로 선언하지 않아도 함수 이름 문맥으로 사용할 수 있다.
+    
+    고차 함수란?
+    1. 함수를 인자로 받는 함수
+    2. 함수를 반환하는 함수
+    * */
+    forEach(intArrayOf(1, 2, 3, 4)) {
+        if (it < 2 || it > 3) return@forEach
+        println(it)
+    }
+
 }
 
