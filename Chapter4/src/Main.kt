@@ -763,6 +763,53 @@ fun main() {
     println(check("Hello"){c ->isCapitalLetter(c)})
     println(check("Hello",::isCapitalLetter))
 
+    /* 5.1.5 인라인 함수와 프로퍼티
+    고차 함수와 함숫값을 사용하면 함수가 객체로 표현되기 때문에 성능 차원에서 부가 비용이 발생한다.
+    더 나아가 익명 함수나 람다가 외부 영역의 변수를 참조하면 고차 함수에 함숫값을 넘길 때마다 이런 외부 영역의 변수를 포획할 수 있는 구조도 만들어서 넘겨야 한다.
+    코틀린은 함숫값을 사용할 때 발생하는 런타임 비용을 줄일 수 있는 해법을 제공한다.
+
+    기본적인 아이디어는 함숫값을 사용하는 고차 함수를 호출하는 부분을 해당 함수의 본문으로 대체하는 인라인 기법을 쓰는 것이다.
+
+     inline fun indexOf(numbers: IntArray, condition: (Int) -> Boolean): Int {
+        for (i in numbers.indices) {
+            if (condition(numbers[i])) return i
+        }
+
+        return -1
+    }
+
+    fun main() {
+    println(indexOf(intArrayOf(4, 3, 2, 1)) { it < 3 }) // 2
+    }
+
+    inline을 붙인 함수는 실행시에 아래와 같이 컴파일이 된다.
+
+    fun main() {
+      val numbers = intArrayOf(4, 3, 2, 1)
+      var index = -1
+
+      for (i in numbers.indices) {
+        if (numbers[i] < 3) {
+          index = i
+          break
+        }
+      }
+
+      println(index)
+    }
+
+    즉 객체를 생성해서 함수값을 처리하는것이 아니라 그냥 본문에 해당 함수를 넣어버린다.
+    인라인 함수를 쓰면 컴파일된 코드의 크기가 커지지만, 지혜롭게 사용하면 성능을 크게 높일 수 있다. 특히, 대상 함수가 상대적으로 작은 경우 성능이 크게 향상된다.
+    앞의 예제는 inline 변경자가 붙은 함수뿐 아니라 이 함수의 파라미터로 전달되는 함숫값도 인라인된다는 사실을 보여준다.
+
+    Inline Function의 제약
+    1. inline함수에 인자로 전달받은 함수는 다른 함수로 전달될수 없음
+    inline 함수의 특징을 다시 보면 알수 있습니다. 위에 말했던것처럼 인라이닝을 통해 람다를 객체로 만들지 않고 본문에 바로 삽입시키기 때문이다. 둘다 본문에 그대로 쓰여져 나와 전달 할 수가 없다.
+
+    2.inline함수에 인자로 전달받은 함수는 다른 함수로 참조될수 없음
+    참조 -> https://munseong.dev/kotlin/inlinefunction/
+    * */
+
 
 }
 
