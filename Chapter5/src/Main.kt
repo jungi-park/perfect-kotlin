@@ -307,5 +307,25 @@ fun main() {
         this[midIndex] = value
     }
     * */
+
+    /* 5.4 동반 확장
+    동반객체는 이 클래스에 내포된 객체 중에서 바깥 클래스의 이름을 통해 객체 멤버에 접근할 수 있는 특별한 객체다.
+    이런 유용한 성질이 확장의 경우에도 성립한다.
+    * */
+    fun IntRange.Companion.singletonRange(n:Int) = n..n
+
+    println(IntRange.singletonRange(5)) // 5..5
+    println(IntRange.Companion.singletonRange(3)) // 3..3
+
+    /*
+    물론 IntRange.Companion.singletonRange(3)처럼 완전한 동반 객체 이름을 사용해 이함수를 호출할 수도 있다. 확장 프로퍼티도 마찬가지다.
+     val String.Companion.HELLO: String
+    get() = "Hello"
+    * */
+
+
+
+
 }
+
 
