@@ -98,9 +98,9 @@ fun main() {
         }
     }
 
-    fun out(){
+    fun out() {
         var sum = 0
-        foreach(intArrayOf(1,2,3,4)){
+        foreach(intArrayOf(1, 2, 3, 4)) {
             sum += it
         }
         println(sum) // 10
@@ -119,10 +119,10 @@ fun main() {
     ::isCapitalLetter라는 식은 이 식이 가리키는 isCapitalLetter() 함수와 같은 동작을 하는 함숫값을 표현해준다.
     * */
 
-    fun isCapitalLetter(c:Char) = c.isUpperCase() && c.isLetter()
+    fun isCapitalLetter(c: Char) = c.isUpperCase() && c.isLetter()
 
-    println(check("Hello"){c ->isCapitalLetter(c)})
-    println(check("Hello",::isCapitalLetter))
+    println(check("Hello") { c -> isCapitalLetter(c) })
+    println(check("Hello", ::isCapitalLetter))
 
     /* 5.1.5 인라인 함수와 프로퍼티
     고차 함수와 함숫값을 사용하면 함수가 객체로 표현되기 때문에 성능 차원에서 부가 비용이 발생한다.
@@ -206,7 +206,7 @@ fun main() {
     아래 코드는 myFun이라는 레이블을 action 변수 초기화 앞부분에 붙인다
     * */
 
-    val action: (Int) -> Unit = myFun@ {
+    val action: (Int) -> Unit = myFun@{
         if (it < 2 || it > 3) return@myFun
         println(it)
     }
@@ -229,7 +229,7 @@ fun main() {
     아래 함수는 String 타입에 길이를 일정 이하로 제한하는 확장함수이다.
     * */
 
-    fun String.truncate(maxLangth : Int) = if(length <= maxLangth) this else substring(0,maxLangth)
+    fun String.truncate(maxLangth: Int) = if (length <= maxLangth) this else substring(0, maxLangth)
 
     println("Hello".truncate(10)) // Hello
     println("Hello".truncate(3)) // Hel
@@ -244,12 +244,12 @@ fun main() {
     하지만 클래스 안에서 확장 함수를 구현하는 경우 당현히 해당 함수는 클래스의 멤버로 해당 클래스의 캡슐화를 깨지 않고 접근 가능하다
     * */
 
-    class Person(private val age : Int, private val name:String)
+    class Person(private val age: Int, private val name: String)
 
     //fun Person.showInfo() = println("$age,$name") Cannot access 'name': it is private in 'Person'
 
-    class PersonOne(private val age : Int, private val name:String){
-    fun PersonOne.showInfo() = println("$age,$name")
+    class PersonOne(private val age: Int, private val name: String) {
+        fun PersonOne.showInfo() = println("$age,$name")
     }
 
     /*
@@ -312,7 +312,7 @@ fun main() {
     동반객체는 이 클래스에 내포된 객체 중에서 바깥 클래스의 이름을 통해 객체 멤버에 접근할 수 있는 특별한 객체다.
     이런 유용한 성질이 확장의 경우에도 성립한다.
     * */
-    fun IntRange.Companion.singletonRange(n:Int) = n..n
+    fun IntRange.Companion.singletonRange(n: Int) = n..n
 
     println(IntRange.singletonRange(5)) // 5..5
     println(IntRange.Companion.singletonRange(3)) // 3..3
@@ -328,16 +328,16 @@ fun main() {
     이런 함숫값들은 수신 객체 지정 함수 타입이라는 특별한 타입으로 표현된다.
     * */
 
-    fun aggregateOne(numbers:IntArray,op : Int.(Int)->Int):Int{
+    fun aggregateOne(numbers: IntArray, op: Int.(Int) -> Int): Int {
         var result = numbers.firstOrNull() ?: throw IllegalArgumentException("Empty array")
 
-        for(i in 1..numbers.lastIndex) result = result.op(numbers[i])
+        for (i in 1..numbers.lastIndex) result = result.op(numbers[i])
 
         return result
     }
 
-    fun sumOne(numbers:IntArray) = aggregateOne(numbers){
-        op -> this + op
+    fun sumOne(numbers: IntArray) = aggregateOne(numbers) { op ->
+        this + op
     }
 
     /*
@@ -352,9 +352,17 @@ fun main() {
     마찬가지로 익명 함수도 확장 함수 문법을 사용할 수 있다.
     * */
 
-    fun sumTwo(numbers:IntArray) = aggregateOne(numbers, fun Int.(op:Int) = this + op )
+    fun sumTwo(numbers: IntArray) = aggregateOne(numbers, fun Int.(op: Int) = this + op)
 
+    /* 5.5.5 수신 객체가 있는 호출 가능 참조
+    코틀린에서는 수신 객체가 있는 함숫값을 정의하는 호출 가능 참조를 만들 수 있다.
+    문법적으로 이들은 바인딩된 호출 가능 참조와 비슷하지만, 수신 객체를 계산하는 식 대신 수신 객체 타입이 앞에 붙는다는 점이 다르다.
+    * */
 
+    fun Int.max(other: Int) = if (this > other) this else other
+
+    aggregateOne(intArrayOf(1,2,3,4,),Int::plus) // 10 plus는 내장함수다
+    aggregateOne(intArrayOf(1,2,3,4,),Int::max) // 4
 }
 
 
