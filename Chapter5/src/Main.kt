@@ -323,7 +323,36 @@ fun main() {
     get() = "Hello"
     * */
 
+    /* 5.4.1 람다와 수신 객체 지정 함수 타입
+    함수나 프로퍼티와 마찬가지로 코틀린에서는 람다와 익명 함수에 대해서도 확장 수신 객체를 활용할 수 있다.
+    이런 함숫값들은 수신 객체 지정 함수 타입이라는 특별한 타입으로 표현된다.
+    * */
 
+    fun aggregateOne(numbers:IntArray,op : Int.(Int)->Int):Int{
+        var result = numbers.firstOrNull() ?: throw IllegalArgumentException("Empty array")
+
+        for(i in 1..numbers.lastIndex) result = result.op(numbers[i])
+
+        return result
+    }
+
+    fun sumOne(numbers:IntArray) = aggregateOne(numbers){
+        op -> this + op
+    }
+
+    /*
+    파라미터 타입 목록 앞에 타입 이름과 점을 추가해서 수신 객체의 타입을 정의한다.
+    Int.(Int) -> Int
+    이렇게 정의된 경우 이 함수에 전달된 람다는 암시적으로 수신 객체를 가진다. this를 사용해 이 객체에 접근할 수 있다.
+
+    수신객체란?
+    수신 객체(Receiver Object)는 확장 함수나 확장 프로퍼티를 정의할 때 사용되는 개념입니다.
+    확장 함수나 확장 프로퍼티를 정의할 때, 그 함수나 프로퍼티가 어떤 클래스의 멤버인 것처럼 사용할 수 있도록 해주는 것이 수신 객체입니다.
+
+    마찬가지로 익명 함수도 확장 함수 문법을 사용할 수 있다.
+    * */
+
+    fun sumTwo(numbers:IntArray) = aggregateOne(numbers, fun Int.(op:Int) = this + op )
 
 
 }
