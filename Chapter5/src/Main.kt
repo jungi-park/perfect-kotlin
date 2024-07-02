@@ -361,8 +361,8 @@ fun main() {
 
     fun Int.max(other: Int) = if (this > other) this else other
 
-    aggregateOne(intArrayOf(1,2,3,4,),Int::plus) // 10 plus는 내장함수다
-    aggregateOne(intArrayOf(1,2,3,4,),Int::max) // 4
+    aggregateOne(intArrayOf(1, 2, 3, 4), Int::plus) // 10 plus는 내장함수다
+    aggregateOne(intArrayOf(1, 2, 3, 4), Int::max) // 4
 
     /* 5.5.1 영역 함수
     코틀린 표준 라이브러리에는 어떤 식을 계산한 값을 문맥 내부에서 임시로 사용할 수 있도록 해주는 몇가지 함수가 들어있다.
@@ -382,6 +382,136 @@ fun main() {
     영역함수는 조심히 사용해야하며, 남용하면 오히려 코드 가독성이 나빠지고 실수하기도 쉬워진다는 점을 명심하라.
     일반적으로 여러 영역 함수를 내포시키면 this나 it이 어떤 대상을 가리키는지 구분하기 어려워지므로 영역 함수를 여러 겹으로 내포시키지 않는것이 좋다.
     * */
+
+    /* run과 with 함수
+    run()함수는 확장 람다는 받는 함장함수이며 람다의 결과를 돌려준다.
+    기본적인 사용 패턴은 객체 상태를 설정한 다음 이 객체를 대상으로 어떤 결과를 만들어내는 람다를 호출하는 것이다.
+    * */
+
+    class Address {
+        var zipCode: Int = 0
+        var city: String = ""
+        var street: String = ""
+        var house: String = ""
+
+        fun post(message: String): Boolean {
+            "Message for {$zipCode,$city,$street,$house} : $message"
+            return readLine() == "OK"
+        }
+    }
+
+    val isReceived = Address().run {
+        // Address 인스턴스를 this로 사용할 수 있다.
+        zipCode = 123456
+        city = "London"
+        street = "Baker Street"
+        house = "22lb"
+        post("Hello")
+    }
+
+    if (!isReceived) {
+        println("Message is not delivered")
+    }
+
+    /*
+    with 함수는 run과 비슷하다 유일한 차이는 with함수가 확장함수가 아니므로 문맥식을 with 첫번째 인자로 전달해야 한다는 점뿐이다.
+    일반적으로 with를 사용하는 경우는 문맥 식의 멤버 함수와 프로퍼티에 대한 호출을 묶어 동일한 영역 내에서 실행하는 경우다.
+    * */
+
+    val message = with(Address()) {
+        "Address: $city $street $house"
+    }
+
+    println(message)
+
+    /*
+    영역 함수를 사용하지 않으면 다음과 같이 코드를 작성해야 할 것이다.
+    즉, 영역 함수가 없으면 변수를 추가적으로 도입하고 멤버를 호출할 때마다 추가한 변수를 매번 명시해야 했을 것이다 (여기서는 addr)
+    * */
+    val addr = Address()
+    val messageOne = "Address ${addr.city} ${addr.street} ${addr.house}"
+
+    /* 문맥이 없는 run
+    코틀린 표준 라이브러리는 run을 오버로딩한 함수도 제공한다.
+    이 함수는 문맥 식이 없고 람다의 값을 반환하기만 한다. 람다 자체에는 수신 객체도 없고 파라미터도 없다.
+
+    주로 이 함수를 사용하는 경우는 어떤 식이 필요한 부분에서 블록을 사용하는 것이다.
+    아래와 같이 어떤 인스턴스만을 위한 영역이 필요할때 사용한다.
+
+     val addressOne = run {
+        val city = readLine() ?: return
+        val street = readLine() ?: return
+        val house = readLine() ?: return
+        Address(city,street,house)
+    }
+
+    run은 인라인 함수이므로 람다 내부에서 바깥쪽 함수의 제어를 반환시키기 위해 return을 사용해도 된다.
+
+    만약 run 없이 블록을 사용하면 블록을 람다로 취급하기 떄문에 제대로 작동하지 않는다.
+
+    val addressOne = {
+        val city = readLine() ?: return // Error : return is not allowed
+        val street = readLine() ?: return // Error : return is not allowed
+        val house = readLine() ?: return // Error : return is not allowed
+        Address(city,street,house)
+    }
+    * */
+
+
+    /* let 함수
+    let 함수는 run과 비슷하지만 확장 함수 타입의 람다를 받지 않고 인자가 하나뿐인 함수타입 람다를 받는다는 점이 다르다.
+    따라서 문맥 식의 값은 람다의 인자로 전달된다. let의 반환값은 람다가 반환하는 값과 같다.
+    외부 영역에 새로운 변수를 도입하는 일을 피하고 싶을 때 주로 이 함수를 사용한다.
+
+    확장 함수 람다 (Receiver Type Lambda)
+    val sum: Int.(Int) -> Int = { other -> this + other }
+    확장 함수 람다는 특정 타입의 인스턴스를 수신 객체로 사용하여 마치 해당 타입의 멤버 함수인 것처럼 동작합니다.
+    이는 수신 객체를 this 키워드를 사용해 접근할 수 있게 해줍니다.
+    일반 람다 (Regular Lambda)
+    val sum: (Int, Int) -> Int = { a, b -> a + b }
+    일반 람다는 특정 수신 객체 없이 독립적으로 동작합니다. 이를 통해 전달된 매개변수만을 사용해 작업을 수행합니다.
+    * */
+
+    Address().let {
+        // 이 안에서는 it을 통해 Address 인스턴스에 접근할 수 있음
+        println(it)
+        it.post("Hello")
+    }
+
+    /*
+    let의 일반적인 사용법 중에는 넣이 될 수 있는값을 안전성 검사를 거쳐서 널이 될수 없는 함수에 전달하는 용법이 있다.
+    * */
+    val args: Array<String> = arrayOf("AA", "BB", "CC")
+    val index = readLine()?.toInt()
+    val arg = if (index != null) args.getOrNull(index) else null
+    val argOne = index?.let { args.getOrNull(index) }
+
+    /* apply/also 함수
+    apply 함수는 확장 람다를 받는 확장 함수이며 자신의 수신객체를 반환한다.
+    이 함수는 일반적으로 run과 달리 반환값을 만들어내지 않고 객체의 상태를 설정하는 경우에 사용한다.
+
+    수신객체의 this가 생략가능한 이유에 대해서 생각해봤는데 어차피 확장함수는 해당 수신객체의 멤버인 것처럼 사용되는데
+    멤버라면 같은 위치에 있다고 생각되는 함수나 프로퍼티를 호출할때 this를 굳이 붙이지 않아도 불러지는게 맞다고 생각됨
+    * */
+
+    Address().apply {
+        city = "London"
+        street = "Baker Street"
+        house = "22lb"
+    }.post("Hello")
+
+    /*
+    비슷한 함수로는 also가 있다. 이함수는 apply와 달리 인자가 하나 있는 람다를 파라미터로 받는다.
+    * */
+
+    Address().also {
+        it.city = "London"
+        it.street = "Baker Street"
+        it.house = "22lb"
+    }.post("Hello")
+
+
+
 }
 
 
