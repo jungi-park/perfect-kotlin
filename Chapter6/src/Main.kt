@@ -1,3 +1,5 @@
+import java.net.ProtocolFamily
+
 fun main() {
     /* 6.1 이넘 클래스
     이넘 클래스는 미리 정의된 상수들로 이뤄진 제한된 집합을 표현하는 특별한 클래스다.
@@ -77,8 +79,39 @@ fun main() {
 //
 //    val WeekDay.nextDay  get() = weekDays[(ordinal+1)/weekDays.size]
 
+    /* 6.2 데이터 클래스
+    코틀린은 데이터를 저장하기 위한 목적으로 주로 쓰이는 클래스를 선언하는 유용한 기능을 제공한다. 이런 기능을 데이터 클래스라고 부르며
+    이 기능을 사용하면 컴파일러가 동등성을 비교하거나 String으로 변환하는 등의 기본 연산에 대한 구현을 자동으로 생성해준다.
+    그리고 구조 분해 선언을 활용할 수도 있다. 구조 분해를 사용하면 클래스의 프로퍼티를 간단한 한 가지 언어 구성 요소를 사용해 여러 변수에
+    나눠 넣을 수 있다.
+    * */
 
+    /* 6.2.1 데이터 클래스와 데이터 클래스에 대한 연산
+    클래스에 커스텀 동등성을 비교해야하는 경우 보통 equals() 메서드와 이와 연관된 hashCode() 메서드를 구현한다.
+    데이터 클래스는 프로퍼티 목록을 기반으로 이런 메서드를 자동으로 생성해준다.
+    * */
 
+    class Person(val firstName:String,val familyName:String,val age:Int)
+
+    val person1 = Person("John","Doe",25)
+    val person2 = Person("John","Doe",25)
+    val person3 = person1
+
+    println(person1 == person2) // false 주소가 다름
+    println(person1 == person3) // true 주소가 같음
+
+    /*
+    이제 컴파일러가 주생성자에 정의된 프로퍼티의 값을 서로 비교하는 동등성 비교 연산을 자동으로 생성해주기 떄문에 두 비교 모두 true를 반환한다.
+    * */
+
+    data class PersonData(val firstName:String,val familyName:String,val age:Int)
+
+    val person4 = PersonData("John","Doe",25)
+    val person5 = PersonData("John","Doe",25)
+    val person6 = person4
+
+    println(person4 == person5) // true
+    println(person4 == person6) // true
 }
 
 enum class WeekDay {
