@@ -27,8 +27,34 @@ fun main() {
         SUNDAY -> "일요일"
     }
 
+    /* 6.1.2 커스텀 멤버가 있는 이넘 정의하기
+    다른 클래스와 마찬가지로 이넘 클래스도 멤버를 포함할 수 있다. 그 외에도 원한다면, 이넘에도 확장 함수나 프로퍼티를 붙일 수 있다.
+    이넘 클래스도 일반 클래스에 허용되는 정의도 포함할 수 있다.(함수,프로퍼티,주생성자와 부생성자, 초기화 블록, 내부클래스,/내포된 클래스,객체 등)
+    이넘 클래스에 정의된 이런 요소들은 반드시 이넘 상수 목록 뒤에 와야 한다. 이런 경우에는 상수목록과 다른 부분을 구분하기위해 상수목록을 세미콜론으로
+    끝내야 한다.
+    * */
+
+    println(WeekDay.MONDAY.isWorking()) // false
+    println(WeekDay.WEDNESDAY.lowerCaseName) // wednesday
+
+    /*
+    이넘 클래스에 생성자가 있으면 각 이넘 상수의 정의 뒤에도 적절한 생성자 호출을 추가해야 한다.
+    * */
+
+    println(RainbowColor.BLUE.isCold) // true
+    println(RainbowColor.RED.isCold) // true
+
 }
 
 enum class WeekDay {
-    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+    MONDAY{fun startWork() = println("일시작") }, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
+
+    val lowerCaseName get() = name.lowercase()
+    fun isWorkDay() = this == SATURDAY || this == SUNDAY
+}
+
+enum class RainbowColor(val isCold: Boolean) {
+    RED(false), ORANGE(false), YELLOW(false), GREEN(true), BLUE(true), INDIGO(true), VIOLET(true);
+
+    val isWarm get() = !isCold
 }
