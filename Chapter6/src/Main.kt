@@ -112,6 +112,48 @@ fun main() {
 
     println(person4 == person5) // true
     println(person4 == person6) // true
+
+    /*
+    String, PersonData, Mailbox는 모두 내용을 바탕으로 동등성을 구현하기 때문에
+    Mailbox 인스턴스 비교는 address 프로퍼티 비교와 person에 들어있는 PersonData 클래스의 동등성 비교에 따라 결정된다.
+    하지만 데이터 클래스가 아니면, Person 프로퍼티 비교가 객체의 정체성에 따라 결정되기 때문에 결과가 바뀐다.
+    * */
+    data class Mailbox(val address: String, val person: PersonData)
+
+    val box1 = Mailbox("Unknown", PersonData("John", "Doe", 25))
+    val box2 = Mailbox("Unknown", PersonData("John", "Doe", 25))
+
+    println(box1 == box2) // true
+
+    data class MailboxOne(val address: String, val person: Person)
+
+    val box3 = MailboxOne("Unknown", Person("John", "Doe", 25))
+    val box4 = MailboxOne("Unknown", Person("John", "Doe", 25))
+
+    println(box3 == box4) // false: 두 Person 인스턴스의 정체성이 다름
+
+    /*
+    주 생성자의 파라미터에서 선언한 프로퍼티만 equals() / hashCode() / toString() 메서드 구현에 쓰인다.
+    다른 프로퍼티들은 이런 함수들의 생성에 영향을 못미친다.
+    모든 데이터 클래스는 copy() 함수를 제공한다. 이 함수를 사용하면 인스턴스를 복사하면서 몇몇 프로퍼티를 변경할 수 있다.
+    copy()는 불변 데이터 구조를 더 쉽게 사용하도록 해준다.
+    * */
+
+    /*
+    코틀린은 두 가지 범용 데이터 클래스가 있다. 두 값(한 쌍: pair)이나 세 값(트리플렛: triple)을 저장할 수 있는 데이터 클래스이다.
+    * */
+
+    val pair = Pair(1, "two")
+
+    println(pair.first + 1)  // 2
+    println("${pair.second}!") // two!
+
+    val triple = Triple("one", 2, false)
+
+    println("${triple.first}!") // one!
+    println(triple.second - 1)  // 1
+    println(!triple.third)      // true
+
 }
 
 enum class WeekDay {
