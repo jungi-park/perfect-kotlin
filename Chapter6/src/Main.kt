@@ -1,4 +1,5 @@
 import java.net.ProtocolFamily
+import kotlin.random.Random
 
 fun main() {
     /* 6.1 이넘 클래스
@@ -91,10 +92,10 @@ fun main() {
     데이터 클래스는 프로퍼티 목록을 기반으로 이런 메서드를 자동으로 생성해준다.
     * */
 
-    class Person(val firstName:String,val familyName:String,val age:Int)
+    class Person(val firstName: String, val familyName: String, val age: Int)
 
-    val person1 = Person("John","Doe",25)
-    val person2 = Person("John","Doe",25)
+    val person1 = Person("John", "Doe", 25)
+    val person2 = Person("John", "Doe", 25)
     val person3 = person1
 
     println(person1 == person2) // false 주소가 다름
@@ -104,10 +105,10 @@ fun main() {
     이제 컴파일러가 주생성자에 정의된 프로퍼티의 값을 서로 비교하는 동등성 비교 연산을 자동으로 생성해주기 떄문에 두 비교 모두 true를 반환한다.
     * */
 
-    data class PersonData(val firstName:String,val familyName:String,val age:Int)
+    data class PersonData(val firstName: String, val familyName: String, val age: Int)
 
-    val person4 = PersonData("John","Doe",25)
-    val person5 = PersonData("John","Doe",25)
+    val person4 = PersonData("John", "Doe", 25)
+    val person5 = PersonData("John", "Doe", 25)
     val person6 = person4
 
     println(person4 == person5) // true
@@ -141,6 +142,8 @@ fun main() {
 
     /*
     코틀린은 두 가지 범용 데이터 클래스가 있다. 두 값(한 쌍: pair)이나 세 값(트리플렛: triple)을 저장할 수 있는 데이터 클래스이다.
+    대부분의 경우 이 같은 범용 데이터 클래스보다는 커스텀 클래스를 사용하는 편이 더 낫다.
+    커스텀 클래스를 정의하면 클래스의 프로퍼티에 의미가 있는 이름을 부여할 수 있어서 코드 가독성을 향상시킬 수 있다.
     * */
 
     val pair = Pair(1, "two")
@@ -154,6 +157,69 @@ fun main() {
     println(triple.second - 1)  // 1
     println(!triple.third)      // true
 
+    /* 6.2.2 구조 분해 선언
+    아래 코드는 PersonData 인스턴스의 각 프로퍼티를 추출한 다음 계산에 황용하고 있다.
+    하지만 PersonData가 데이터 클래스이므로 이를 각각의 프로퍼티에 대응하는 지역 변수를 정의하는 좀 더 간결한 구문으로 대신할 수 있다.
+    * */
+
+    fun newPerson() = PersonData(readLine()!!, readLine()!!, Random.nextInt())
+
+    val new = newPerson()
+    val firstName = new.firstName
+    val familyNmae = new.familyName
+    val age = new.age
+    if (age < 18) {
+        println("$firstName $familyNmae is under-age")
+    }
+
+
+    /*
+    아래와 같은 선언을 구조 분해 선언이라고 하며,
+    변수 이름을 하나만 사용하는 대신 괄호로 감싼 식별자 목록으로 여러 변수를 한꺼번에 정의할 수 있게 해주는 일반화된 지역 변수 선언 구문이다.
+    여기서 각 변수에 어떤 프로퍼티가 매핑되는지 데이터 클래스의 생성자에 있는 각 프로퍼티의 위치에 따라 결정되며, 선언하는 변수의 이름에 의해
+    결정되지 않는다는 점에 유의하라
+    * */
+
+    val (first, family, ages) = PersonData("John", "Doe", 25)
+
+
+    /*
+    구조 분해 선언 전체는 타입이 없다. 하지만 필요하면 구조 분해를 이루는 각 컴포넌트 변수에 타입을 표기할 수는 있다.
+    * */
+    val (firstone, familyone: String, agess) = PersonData("John", "Doe", 25)
+
+    /*
+    구조 분해 선언에 데이터 클래스의 프로퍼티 수보다 적은 수의 변수가 들어갈 수도 있다.
+    이런 경우 생성자의 뒷부분에 선언된 프로퍼티는 추출되지 않는다.
+    * */
+
+    val (firsttwo, familytwo) = PersonData("John", "Doe", 25)
+    println("$firsttwo $familytwo") // John Doe
+
+    /*
+    시작 부분이나 중간 부분에서 몇 가지 프로퍼티를 생략해야 한다면 어떻게 해야 할까?
+    람다의 사용하지 않는 파라미터와 비슷하게 구조 분해에서 사용하지 않는 부분을 _로 대신할 수 있다.
+    * */
+
+    val (_, fam) = PersonData("John", "Doe", 25)
+    println("$fam") // Doe
+
+    /*
+    val을 var로 바꾸면 변경할 수 있는 변수들을 얻을 수 있다.
+    val/var 지정은 모든 변수를 가변 변수로 정의하거나 모든 변수를 불변 변수로 정의해야만 하며, 둘을 섞어서 정의할 수는 없다.
+    * */
+
+    /*
+    구조 분해 할당은 for루프에서도 사용할 수 있다
+    * */
+
+    val pairs = arrayOf(Pair(1,2),Pair(1,2),Pair(1,2),Pair(1,2))
+
+    for ((one,two) in pairs){}
+
+    /*
+    데이터 클래스는 선언하기만 하면 자동으로 구조 분해를 지원하지만, 일반적으로 아무 코틀린 타입이나 구조 분해를 사용할 수 있게 구현할 수 있다.
+    * */
 }
 
 enum class WeekDay {
@@ -165,7 +231,7 @@ enum class WeekDay {
 
 val weekDays = Direction.values();
 
-val WeekDay.nextDay  get() = weekDays[(ordinal+1)/weekDays.size]
+val WeekDay.nextDay get() = weekDays[(ordinal + 1) / weekDays.size]
 
 enum class RainbowColor(val isCold: Boolean) {
     RED(false), ORANGE(false), YELLOW(false), GREEN(true), BLUE(true), INDIGO(true), VIOLET(true);
