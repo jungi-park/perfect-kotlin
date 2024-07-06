@@ -259,6 +259,56 @@ fun main() {
     인라인 클래스도 자체 함수와 프로퍼티를 포함할 수 있다.
     * */
 
+    /* 6.3.2 부호 없는 정수
+    코틀린에 내장된 부호 있는 타입을 기반으로 인라인 클래스로 작성된 부호 없는 정수 타입이 코틀린 표준 라이브러리에 추가됐다.
+    부호 없는 정수 타입의 이름은 상응하는 부호 있는 정수 타입의 이름 앞에 U를 덧붙인 것이다.
+
+    UByte
+    UShort
+    UInt
+    ULong
+
+    부호 없는 값을 표현 하려면 정수 리터럴 뒤에 u,U 접두사를 붙인다.
+    리터럴 타입은 리터럴이 대입될 변수의 타입에 따라 결정되지만, 변수에 타입을 지정하지 않은 경우에는 크기에 따라 UInt,ULong 중 하나로 결정된다.
+    * */
+
+    val uByte: UByte = 1u // 명시적으로 UByte
+    val uShort: UShort = 100u // 명시적으로 UShort
+    val uInt = 1000u // 자동으로 UInt로 추론
+    val uLong: ULong = 1000u // 명시적으로 ULong
+    val uLong2 = 1000uL // L 접미사가 붙었기 때문에 명시적으로 ULong
+
+    /*
+    부호가 있는 타입과 부호가 없는 타입은 서로 호환되지 않는다.
+    val long : Long = 1000uL // Error
+
+    부호가 있는 타입과 없는 타입의 값을 toXXX()를 통해 반대쪽 타입으로 변환할 수 있다.
+    * */
+
+    print(1.toUByte()) // 1, Int -> UByte
+    println((-100).toUShort()) // 65436, Int -> UShort
+
+    /*
+    부호가 없는 타입의 API는 부호가 있는 타입의 API와 매우 비슷하다.
+    특히 +,-,*,/,% 연산자의 경우 부호가 없는 값을 모든 가능한 방식으로 짝을 지어 사용할 수 있다.
+    하지만 부호가 없는 타입의 값과 부호가 있는 타입의 값을 섞어서 사용할 수는 없다.
+    또한 증감연산자나 비트연산 그리고 값을 비교할 수 있다.
+
+    코틀린 표준 라이브러리에는 부호 없는 정수 배열을 표현하는 UByteArray,UShortArray,UIntArray,ULongArray를 지원한다.
+    또한 범위와 진행 타입에도 부호 없는 타입이 있다 .. 연산자는 물론 until과 downTo를 사용해서 이런 타입의 값을 만들 수 있다.
+    * */
+
+    println(1u+2u)
+    println(1u-2u)
+    println(1u*2u)
+    println(1u/2u)
+    println(1u%2u)
+
+    // println(1u+2) Error
+
+    val a = ubyteArrayOf(1u,2u,3u)
+
+    1u..10u
 
 }
 
