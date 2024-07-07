@@ -87,6 +87,15 @@ fun main() {
     * */
 
     /* 7.1.2 Comparable과 Comparator
+
+    주요 차이점
+    정렬 기준:
+    Comparable: 객체의 자연 순서를 정의합니다. 객체 자체에 정렬 로직이 포함됩니다.
+    Comparator: 객체의 외부에서 정렬 순서를 정의합니다. 여러 가지 정렬 기준을 만들 수 있습니다.
+    사용 방법:
+    Comparable: 클래스가 Comparable 인터페이스를 구현하고 compareTo 메서드를 오버라이드해야 합니다.
+    Comparator: 별도의 클래스를 만들어 Comparator 인터페이스를 구현하고 compare 메서드를 오버라이드해야 합니다.
+
     자바처럼 코틀린도 Comparable과 Comparator 타입을 지원한다.
     Comparable(비교 가능) 인스턴스는 자연적인 순서를 지원하며, 동일한 타입의 다른 인스턴스와 순서를 비교할 때 쓸 수 있는 compareTo() 메서드를 포함한다
     compareTo() 함수는 수신 객체 인스턴스가 인자로 받은 상대 인스턴스보다 더 크면 양수, 더 작으면 음수, 같으면 0을 반환한다.
@@ -118,5 +127,17 @@ fun main() {
 
     val AGE_COMPARATORONE = compareBy<Person>{ it.age }
     val REVERSE_AGE_COMPARATOR = compareByDescending<Person> { it.age }
+
+
+    val people = listOf(
+        Person("John", "Doe", 30),
+        Person("Jane", "Smith", 25),
+        Person("Alice", "Johnson", 28)
+    )
+
+    val sortedByName = people.sorted()
+    val sortedByAge = people.sortedWith(AGE_COMPARATOR)
+    val sortedByAgeLambda = people.sortedWith(AGE_COMPARATORONE)
+    val sortedByAgeDescending = people.sortedWith(REVERSE_AGE_COMPARATOR)
 
 }
