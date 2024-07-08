@@ -1,3 +1,8 @@
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
+
 fun main() {
 
     /* 7.1 컬렉션
@@ -140,4 +145,111 @@ fun main() {
     val sortedByAgeLambda = people.sortedWith(AGE_COMPARATORONE)
     val sortedByAgeDescending = people.sortedWith(REVERSE_AGE_COMPARATOR)
 
+
+    /* 7.1.3 컬랙션 생성하기
+    자바와 마찬가지로 ArrayList나 LinkedHashSet 같은 클래스의 인스턴스를 생성자를 호출해 생성할 수 있다.
+    * */
+
+    val alist = ArrayList<String>()
+    alist.add("red")
+    alist.add("green")
+    println(alist) // [red, green]
+
+    val set = HashSet<Int>()
+    set.add(12)
+    set.add(21)
+    set.add(12)
+    println(set) // [12, 21]
+
+    val map = TreeMap<Int, String>()
+    map[20] = "Twenty"
+    map[10] = "Ten"
+    println(map) // {10=Ten, 20=Twenty}
+
+    /*
+    arrayOf() 와 비슷하게 가변 길이 인자를 받는 함수를 사용해 몇몇 컬렉션 클래스의 인스턴스를 생성할 수 있다.
+    emptyList() / emptySet(): 불변인 리스트/집합 인스턴스를 생성한다.
+    listOf() / setOf(): 인자로 제공한 가변 길이 인자에 기반한 불변 리스트/집합 인스턴스를 만든다.
+    listOfNotNull(): 널인 값을 걸러내고 남은 원소들로 이뤄진 새 불변 리스트를 만든다.
+    mutableListOf() / mutableSetOf(): 가변 리스트/집합의 디폴트 구현 인스턴스를 만든다.
+    arrayListOf(): 새로운 ArrayList를 만든다.
+    hashSetOf() / linkedSetOf() / sortedSetOf(): HashSet / LinkedHashSet / TreeSet의 새 인스턴스를 만든다.
+    * */
+
+    val emptyList = emptyList<String>()
+    println(emptyList)    // []
+    //emptyList.add("abc")  // Error
+
+    val singletonSet = setOf("abc")
+    println(singletonSet)      // [abc]
+    //singletonSet.remove("abc") // Error
+
+    val mutableList = mutableListOf("abc")
+    println(mutableList)  // [abc]
+    mutableList.add("def")
+    mutableList[0] = "xyz"
+    println(mutableList)  // [xyz, def]
+
+    val sortedSet = sortedSetOf(8, 5, 7, 1, 4)
+    println(sortedSet)  // [1, 4, 5, 7, 8]
+    sortedSet.add(2)
+    println(sortedSet)  // [1, 2, 4, 5, 7, 8]
+
+    /*
+    맵을 만들 때도 비슷한 함수를 쓸 수 있다.
+    emptyMap(): 빈 불변 맵을 만든다.
+    mapOf(): 새 불변 맵을 만든다(내부적으로 LinkedHashMap을 만든다).
+    mutableMapOf(): 가변 맵의 디폴트 구현 인스턴스를 만든다(내부적으로 LinkedHashMap을 만든다).
+    hashMapOf() / linkedMapOf() / sortedMapOf(): HashMap / LinkedHashMap / TreeMap의 새 인스턴스를 만든다.
+
+    맵 함수들은 Pair 객체들로 이뤄진 가변 인자를 받는다. to 중위 연산자를 사용하면 Pair 객체를 쉽게 만들 수 있다.
+    * */
+
+    val emptyMap = emptyMap<Int, String>()
+    println(emptyMap) // {}
+    // emptyMap[10] = "Ten" // Error
+
+    val singletonMap = mapOf(10 to "Ten")
+    println(singletonMap) // {10=Ten}
+    // singletonMap.remove("abc") // error
+
+    val mutableMap = mutableMapOf(10 to "Ten")
+    println(mutableMap)  // {10=Ten}
+    mutableMap[20] = "Twenty"
+    mutableMap[100] = "Hundred"
+    mutableMap.remove(10)
+    println(mutableMap)  // {20=Twenty, 100=Hundred}
+
+    val sortedMap = sortedMapOf(3 to "three", 1 to "one", 2 to "two")
+    println(sortedMap)
+    sortedMap[0] = "zero"
+    println(sortedMap)
+
+    /*
+    Pair를 사용하지 않고, 가변 맵을 만들고 set() 메서드나 인덱스 연산자([ ])를 사용해 원소를 추가할 수도 있다.
+    배열과 비슷하게 크기를 지정하고 인덱스로부터 값을 만들어주는 함수를 제공함으로써 새 리스트를 만들 수도 있다.
+    * */
+    println(List(5) { it * it})  // [0, 1, 4, 9, 16]
+
+    val numbers = MutableList(5) { it * 2 }
+    println(numbers)  // [0, 2, 4, 6, 8]
+    numbers.add(100)
+    println(numbers)  // [0, 2, 4, 6, 8, 100]
+
+    /*
+    시퀀스는 sequenceOf() 함수를 사용해 구현할 수 있으며, 가변 인자또는 배열, 이터러블, 맵 등의 기존 컬렉션에 대해 asSequence() 함수를 호출해서 시퀀스를 얻을 수도 있다.
+    * */
+    println(sequenceOf(1, 2, 3).iterator().next())   // 1
+    println(listOf(10, 20, 30).asSequence().iterator().next()) // 10
+    println(
+        mapOf(1 to "One", 2 to "Two").asSequence().iterator().next()
+    )  // 1=One
+
+    /*
+    마지막으로 배열 원소를 바탕으로 리스트를 만들거나 시퀀스 집합으로 만드는 toSet(), toList(), toMap()과 같은 컬렉션 사이의 변환을 처리하는 함수이다.
+    * */
+    println(listOf(1, 2, 3, 2, 3).toSet()) // [1, 2, 3]
+    println(arrayOf("red", "green", "blue").toSortedSet()) // [blue, green, red]
+    println(mapOf(1 to "one", 2 to "two", 3 to "three").toList()) // [(1, one), (2, two), (3, three)]
+    println(sequenceOf(1 to "one", 2 to "two", 3 to "three").toMap()) // {1=one, 2=two, 3=three}
 }
