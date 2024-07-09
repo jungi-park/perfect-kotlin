@@ -252,4 +252,105 @@ fun main() {
     println(arrayOf("red", "green", "blue").toSortedSet()) // [blue, green, red]
     println(mapOf(1 to "one", 2 to "two", 3 to "three").toList()) // [(1, one), (2, two), (3, three)]
     println(sequenceOf(1 to "one", 2 to "two", 3 to "three").toMap()) // {1=one, 2=two, 3=three}
+
+    /* 7.1.4 기본 컬렉션 연산
+    컬렉션 타입이 지원하는 기본 연산들이 있다. 모든 컬렉션이 기본으로 지원하는 공통 연산으로는 이터레이션이 있다.
+    * */
+
+    val maps = mapOf(1 to "one", 2 to "two", 3 to "three")
+    for ((key, value) in maps) {
+        println("$key -> $value")
+    }
+
+    /*
+    for 루프 대신 forEach() 확장 함수를 쓸 수도 있다. 이 함수는 컬렉션의 각 원소를 제공하면서 인자로 받은 람다를 실행해준다.
+    * */
+
+    intArrayOf(1, 2, 3).forEach { println(it*it) }
+    listOf("a", "b", "c").forEach { println("'$it'") }
+    sequenceOf("a", "b", "c").forEach { println("'$it'") }
+    mapOf(1 to "one", 2 to "two", 3 to "three").forEach { (key, value) ->
+        println("$key -> $value")
+    }
+    /*
+    원소의 인덱스를 참조해야 한다면 forEachIndexed() 함수를 쓰면 된다.
+    * */
+    listOf(10, 20, 30).forEachIndexed { i, n -> println("$i: ${n*n}") }
+
+    /*
+    컬렉션 타입이 제공하는 기본 기능은 다음과 같다.
+    size 프로퍼티는 원소의 개수를 리턴
+    isEmpty() 함수는 컬렉션에 원소가 있는지 없는지 검사
+    contains() / containsAll() 함수는 인자값 혹은 인자로 지정한 컬렉션이 수신 객체 컬렉션에 들어있는지 검사
+    * */
+
+    val listo = listOf(1, 2, 3)
+
+    println(listo.isEmpty())                 // false
+    println(listo.size)                      // 3
+    println(listo.contains(4))               // false
+    println(listo.containsAll(listOf(1, 2))) // true
+    println(2 in listo)                     // true
+    // contains() 함수 대신 in 연산자를 사용할 수 있다.
+
+    /*
+    MutableCollection 타입은 원소를 추가하거나 제거할 수 있는 메서드를 제공한다.
+    * */
+    val listt = arrayListOf(1, 2, 3)
+    listt.add(4)                     // [1, 2, 3, 4]
+    listt.remove(3)          // [1, 2, 4]
+    listt.addAll(setOf(5, 6))        // [1, 2, 4, 5 ,6]
+    listt.removeAll(listOf(1, 2))    // [4, 5, 6]
+    listt.retainAll(listOf(5, 6, 7)) // [5, 6] 교집합
+    listt.clear()
+
+    /*
+    += 나 -= 복합 연산을 사용할 수도 있다.
+    * */
+
+    listt += 4
+    listt -= 3
+    listt += setOf(5, 6)
+    listt -= listOf(1, 2)
+
+    /*
+    불변 / 가변 컬렉션 모두 + 와 - 연산자를 지원하며 원본을 그대로 두고 새로운 컬렉션을 생성한다
+    * */
+
+    println(listOf(1, 2, 3) + 4)           // [1, 2, 3, 4]
+    println(listOf(1, 2, 3) - setOf(2, 5)) // [1, 3]
+
+    /*
+    집합(Set)은 컬렉션 공통 메서드만 지원하며 중복을 허용하지 않는다.
+    Map 인스턴스는 키를 사용해 값을 얻는 메서드와 모든 키나 값의 컬렉션을 돌려주는 메서드 등을 지원한다
+    * */
+
+    val maptt = mapOf(1 to "I", 5 to "V", 10 to "X", 50 to "L")
+
+    println(maptt.isEmpty())                 // false
+    println(maptt.size)                      // 4
+    println(maptt.get(5))                    // V
+    println(maptt[10])                       // X
+    println(maptt[100])                      // null
+    println(maptt.getOrDefault(100, "?"))    // ?
+    println(maptt.getOrElse(100) { "?" })    // ?
+    println(maptt.containsKey(10))           // true
+    println(maptt.containsValue("C"))        // false
+    println(maptt.keys)                      // [1, 5, 10, 50]
+    println(maptt.values)                    // [I, V, X, L]
+    println(maptt.entries)                   // [1=I, 5=V, 10=X, 50=L]
+
+    /*
+    MutableMap  인스턴스는 기본적인 변경 연산과 +, - 연산자를 지원한다.
+    * */
+    val mapss = sortedMapOf(1 to "I", 5 to "V")
+
+    mapss.put(100, "C")                    // {1=I, 5=V, 100=C}
+    mapss[500] = "D"                       // {1=I, 5=V, 100=C, 500=D}
+    mapss.remove(1)                   // {5=V, 100=C, 500=D}
+    mapss.putAll(mapOf(10 to "X"))         // {5=V, 10=X, 100=C, 500=D}
+    mapss += 50 to "L"                     // {5=V, 10=X, 50=L, 100=C, 500=D}
+    mapss += mapOf(2 to "II", 3 to "III")  // {2=II, 3=III, 5=V, 10=X, 50=L, 100=C, 500=D}
+    mapss -= 100                           // {2=II, 3=III, 5=V, 10=X, 50=L, 500=D}
+    mapss -= listOf(2, 3)                  // {5=V, 10=X, 50=L, 500=D}
 }
