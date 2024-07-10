@@ -21,5 +21,33 @@ fun main() {
 
     }
 
+    /* 8.1.3 타입 검사와 캐스팅
+    코틀린은 타입검사에 사용 할 수 있는 is 연산자를 제공한다.
+    is 연산자킄 지난 값은 스마트 캐스팅 된다.
+    * */
+
+    val objects = arrayOf(1,2,3,"4",5)
+
+    for(i in objects){
+        println(i is Int)
+    }
+
+    /* 8.1.4 공통 메서드
+    코틀린 Any의 equals() 메서드는 기본적으로 참조 동등성을 비교한다.
+    내용 동등성을 비교하려면 equals()를 오버라이드 해야한다. ==,!= 연산자는 equals() 메서드를 사용한다.
+    equals 메서드를 오버라이드한 경우 참조 동등성 비교는 === 연산자를 통해서 한다.
+    * */
+
+    class Person(val name: String, val age: Int) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Person) return false
+            return name == other.name && age == other.age
+        }
+
+        override fun hashCode(): Int {
+            return name.hashCode() * 31 + age
+        }
+    }
 
 }
