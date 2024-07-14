@@ -7,17 +7,18 @@ fun main() {
     open이 붙은 start 함수는 override 할 수 있지만 붙지 않은 stop 함수는 override 할 수없다.
     * */
 
-    open class Vehicle{
-        open fun start(){
+    open class Vehicle {
+        open fun start() {
             println("start")
         }
-        fun stop(){
+
+        fun stop() {
             println("stop")
         }
     }
 
-    class car(): Vehicle() {
-        override fun start(){}
+    class car() : Vehicle() {
+        override fun start() {}
 
     }
 
@@ -26,9 +27,9 @@ fun main() {
     is 연산자킄 지난 값은 스마트 캐스팅 된다.
     * */
 
-    val objects = arrayOf(1,2,3,"4",5)
+    val objects = arrayOf(1, 2, 3, "4", 5)
 
-    for(i in objects){
+    for (i in objects) {
         println(i is Int)
     }
 
@@ -82,6 +83,7 @@ fun main() {
     ) : PersonData by newIdentity {
         override val age: Int
             get() = realIdentity.age
+
         // newIdentity를 위임받아 this로 받을 수 있다.
         override fun toString() = "${this.name} ${this.age}"
     }
@@ -90,7 +92,6 @@ fun main() {
     val johnDoe = Alias(valWatts, Persons("John Doe", 25))
     println(johnDoe.age) // 30
     println(johnDoe) // John Doe 25
-
 
 }
 
