@@ -85,6 +85,18 @@ fun main() {
         val items = ArrayList<T>()
     }
 
+    /* 9.1.3 타입 소거와 구체화
+    제네릭은 타입 안정성을 보장하며, 실행시간에 오버헤드가 발생하지 않도록 하기위해 JDK 1.5부터 도입된 문법으로
+    이전 자바에서는 제네릭 타입 파라미터 없이 자바를 코딩해왔다. 그래서 이전의 자바 버전의 코드와 호환성을 위해 제네릭 코드는 컴파일되면 제네릭 타입은 사라지게 된다.
+    즉, 클래스 파일(.class)에는 제네릭 타입에 대한 정보는 존재하지 않는 것이다.
+
+    따라서 아래 예제에서 data is T 는 T가 어떤 타입을 뜻할지 알 방법이 없다. 마찬가지 이유로 제네릭 타입에 is 연산자를 적용하는 것도 의미가 없다.
+    * */
+
+//    fun <T>TreeNode<Any>.isInstanceOf(): Boolean =
+//        //Cannot check for instance of erased type: T
+//        data is T && children.all { it.isInstanceOf<T>() }
+
 }
 
 
