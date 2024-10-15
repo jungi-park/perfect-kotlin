@@ -1,4 +1,5 @@
 import kotlinx.coroutines.*
+import kotlin.system.measureTimeMillis
 
 
 //1. 코루틴과 일시 중단 함수
@@ -94,16 +95,16 @@ launch() 빌더는 동시성 작업이 결과를 만들어내지 않는 경우 �
     코루틴이 성공적으로 끝나면 일시 중단 람다의 결과가 runBlocking() 호출의 결괏값이 된다. 코루틴이 취소되면 runBlocking()은 예외를 던진다
  */
 
-fun main() {
-    GlobalScope.launch {
-        delay(100)
-        println("Background task: ${Thread.currentThread().name}")
-    }
-    runBlocking {
-        println("Primary task: ${Thread.currentThread().name}")
-        delay(200)
-    }
-}
+//fun main() {
+//    GlobalScope.launch {
+//        delay(100)
+//        println("Background task: ${Thread.currentThread().name}")
+//    }
+//    runBlocking {
+//        println("Primary task: ${Thread.currentThread().name}")
+//        delay(200)
+//    }
+//}
 /*
     Primary task: main
     Background task: DefaultDispatcher-worker-1
@@ -111,3 +112,53 @@ fun main() {
 
 
 //runBlocking() 내부의 코루틴은 메인 스레드에서 실행되는 반면, launch()로 시작한 코루틴은 공유 풀에서 백그라운드 스레드를 할당 받았음을 알 수 있다
+
+
+fun main() = runBlocking {
+    // API 호출의 실행 시간을 측정
+    val totalTime = measureTimeMillis {
+        // 현재 스코프에서 async를 사용하여 결과를 반환하는 코루틴 생성
+        val resultA = async {
+            함수A()
+        }
+
+        // 현재 스코프에서 async를 사용하여 결과를 반환하는 코루틴 생성
+        val resultB = async {
+            함수B()
+        }
+
+        // 결과를 기다림
+        println(resultA.await())
+        println(resultB.await())
+    }
+
+    println("총 실행 시간: $totalTime ms")
+}
+
+/* suspend 함수로 정의
+함수 A의 결과
+함수 B의 결과
+총 실행 시간: 1013 ms*/
+suspend fun 함수A(): String {
+    delay(1000) // 가상의 API 호출 대기 시간
+    return "함수 A의 결과"
+}
+
+suspend fun 함수B(): String {
+    delay(1000) // 가상의 API 호출 대기 시간
+    return "함수 B의 결과"
+}
+
+/* 일반 함수로 정의 (suspend 없음)
+함수 A의 결과
+함수 B의 결과
+총 실행 시간: 2021 ms*/
+//fun 함수A(): String {
+//    Thread.sleep(1000) // 가상의 API 호출 대기 시간
+//    return "함수 A의 결과"
+//}
+//
+//fun 함수B(): String {
+//    Thread.sleep(1000) // 가상의 API 호출 대기 시간
+//    return "함수 B의 결과"
+//}
